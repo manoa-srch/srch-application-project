@@ -1,0 +1,48 @@
+{
+  "name": "nextjs-application-template-s26",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "seed": "npx tsx src/seed.ts",
+    "playwright": "npx playwright test"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@prisma/adapter-pg": "^7.4.2",
+    "@prisma/client": "^7.4.2",
+    "bcrypt": "^6.0.0",
+    "bootstrap": "^5.3.8",
+    "dotenv": "^17.3.1",
+    "next": "16.1.6",
+    "next-auth": "^5.0.0-beta.30",
+    "pg": "^8.19.0",
+    "react": "19.2.3",
+    "react-bootstrap": "^2.10.10",
+    "react-bootstrap-icons": "^1.11.6",
+    "react-dom": "19.2.3",
+    "react-hook-form": "^7.71.2",
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.26.21",
+    "ts-node": "^10.9.2",
+    "yup": "^1.7.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/bcrypt": "^6.0.0",
+    "@types/node": "^20.19.35",
+    "@types/pg": "^8.18.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.6",
+    "eslint-config-prettier": "^10.1.8",
+    "prisma": "^7.4.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
