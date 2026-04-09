@@ -1,42 +1,29 @@
-import { PrismaClient, Role, Condition } from '@prisma/client';
-import { hash } from 'bcrypt';
+import { PrismaClient, Role } from '@prisma/client';
 import * as config from '../config/settings.development.json';
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log('Seeding the database');
-  const password = await hash('changeme', 10);
   config.defaultAccounts.forEach(async (account) => {
     const role = account.role as Role || Role.USER;
+    const emailPrefix = account.email.split('@')[0] || 'user';
+    const firstName = emailPrefix;
+    const lastName = 'User';
     console.log(`  Creating user: ${account.email} with role: ${role}`);
     await prisma.user.upsert({
       where: { email: account.email },
-      update: {
-        password,
-      },
+      update: {},
       create: {
         email: account.email,
-        password,
+        firstName,
+        lastName,
+        name: `${firstName} ${lastName}`,
         role,
       },
     });
     // console.log(`  Created user: ${user.email} with role: ${user.role}`);
   });
-  for (const data of config.defaultData) {
-    const condition = data.condition as Condition || Condition.good;
-    console.log(`  Adding stuff: ${JSON.stringify(data)}`);
-    await prisma.stuff.upsert({
-      where: { id: config.defaultData.indexOf(data) + 1 },
-      update: {},
-      create: {
-        name: data.name,
-        quantity: data.quantity,
-        owner: data.owner,
-        condition,
-      },
-    });
-  }
 }
 main()
   .then(() => prisma.$disconnect())
