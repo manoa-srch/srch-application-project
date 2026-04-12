@@ -24,6 +24,7 @@ export async function createUser(credentials: { email: string; password: string 
     update: {},
     create: {
       email: credentials.email,
+      password: credentials.password,
       firstName,
       lastName,
       name: `${firstName} ${lastName}`,
