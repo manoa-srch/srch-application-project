@@ -1,7 +1,6 @@
-import { PrismaClient, Role } from '@prisma/client';
+import { Role } from '@prisma/client';
 import * as config from '../config/settings.development.json';
-
-const prisma = new PrismaClient();
+import { prisma } from '../src/lib/prisma';
 
 async function main() {
   console.log('Seeding the database');
@@ -16,14 +15,20 @@ async function main() {
 
     await prisma.user.upsert({
       where: { email: account.email },
-      update: {},
+      update: {
+        firstName,
+        lastName,
+        name: `${firstName} ${lastName}`,
+        role,
+        password: 'changeme123',
+      },
       create: {
         email: account.email,
         firstName,
         lastName,
         name: `${firstName} ${lastName}`,
         role,
-        password: 'changeme123', // 🔥 simple password for all test users
+        password: 'changeme123',
       },
     });
   }
