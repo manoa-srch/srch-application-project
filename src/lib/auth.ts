@@ -1,4 +1,3 @@
-
 import NextAuth, { type DefaultSession } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { prisma } from './prisma';
@@ -11,7 +10,6 @@ declare module 'next-auth' {
   }
 }
 
-// Export v5 handlers and helpers
 export const { auth, signIn, signOut, handlers } = NextAuth({
   providers: [
     Credentials({
@@ -20,7 +18,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        // Type guard for credentials
         if (
           !credentials ||
           typeof credentials.email !== 'string' ||
@@ -28,13 +25,21 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         ) {
           return null;
         }
-        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
+
         if (!user) return null;
-        // Return user object for session
+
+        if (credentials.password !== user.password) {
+          return null;
+        }
+
         return {
           id: user.id.toString(),
           email: user.email,
-          name: user.email,
+          name: user.name ?? `${user.firstName} ${user.lastName}`,
           role: user.role,
         };
       },
@@ -55,7 +60,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       };
     },
     jwt({ token, user }) {
-      // user is type: { id?: string; email?: string; name?: string; role?: string }
       if (user && typeof (user as { role?: string }).role === 'string') {
         token.role = (user as { role?: string }).role;
       }

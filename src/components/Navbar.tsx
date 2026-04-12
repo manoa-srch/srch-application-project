@@ -15,24 +15,12 @@ import {
 } from 'react-bootstrap-icons';
 
 const NavBar: React.FC = () => {
-  // Remove comment to allow default home page for not logged in. Commenting out for testing.
-  // const { data: session, status } = useSession();
-  // End of removal
-
-  // Remove later after testing complete
-  const session = {
-    user: {
-      email: 'test@hawaii.edu',
-      role: 'INSTRUCTOR',
-    },
-  };
-const status = 'authenticated';
+  const { data: session, status } = useSession();
   const pathName = usePathname();
-  // Put back in after Testing
-  //if (status === 'loading') return null;
-  
-  // Default to use when not logged in
-  const currentUser = session?.user?.email; 
+
+  if (status === 'loading') return null;
+
+  const currentUser = session?.user?.email;
   const role = session?.user?.role;
 
   return (
