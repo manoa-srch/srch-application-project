@@ -1,4 +1,4 @@
-import { Role } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import * as config from '../config/settings.development.json';
 import { prisma } from '../src/lib/prisma';
 
@@ -10,6 +10,14 @@ async function main() {
     const emailPrefix = account.email.split('@')[0] || 'user';
     const firstName = emailPrefix;
     const lastName = 'User';
+    const userData: Prisma.UserCreateInput = {
+      email: account.email,
+      firstName,
+      lastName,
+      name: `${firstName} ${lastName}`,
+      role,
+      password: 'changeme123',
+    };
 
     console.log(`  Creating user: ${account.email} with role: ${role}`);
 
@@ -22,14 +30,7 @@ async function main() {
         role,
         password: 'changeme123',
       },
-      create: {
-        email: account.email,
-        firstName,
-        lastName,
-        name: `${firstName} ${lastName}`,
-        role,
-        password: 'changeme123',
-      },
+      create: userData,
     });
   }
 
