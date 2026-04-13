@@ -48,7 +48,7 @@ const ProfilePage = async () => {
                 <Badge bg="secondary">{user.role}</Badge>
               </Col>
               <Col md={4} className="text-md-end mt-3 mt-md-0">
-                <Button variant="outline-primary" size="sm">
+                <Button variant="outline-primary" size="sm" href="/profile/edit">
                   Edit Profile
                 </Button>
               </Col>
@@ -76,7 +76,11 @@ const ProfilePage = async () => {
                       <Button size="sm" variant="primary" href={`/courses/${course.id}`}>
                         Open
                       </Button>
-                      <Button size="sm" variant="outline-secondary">
+                      <Button
+                        size="sm"
+                        variant="outline-secondary"
+                        href={`/courses/${course.id}/edit`}
+                      >
                         Edit
                       </Button>
                     </div>

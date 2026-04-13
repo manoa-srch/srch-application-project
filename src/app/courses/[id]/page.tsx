@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { deleteCourse } from './actions';
 
 type CoursePageProps = {
   params: Promise<{
@@ -77,6 +78,12 @@ const CoursePage = async ({ params }: CoursePageProps) => {
               <Button variant="primary" href={`/courses/${course.id}/edit`}>
                 Edit Course
               </Button>
+              <form action={deleteCourse}>
+                <input type="hidden" name="id" value={course.id} />
+                <Button type="submit" variant="outline-danger">
+                  Delete Course
+                </Button>
+              </form>
             </div>
           </Col>
         </Row>
