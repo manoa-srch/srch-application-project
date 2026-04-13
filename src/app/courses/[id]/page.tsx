@@ -44,6 +44,16 @@ const CoursePage = async ({ params }: CoursePageProps) => {
         orderBy: {
           position: 'asc',
         },
+        include: {
+          mappings: {
+            where: {
+              isSelected: true,
+            },
+            include: {
+              srchContent: true,
+            },
+          },
+        },
       },
     },
   });
@@ -178,14 +188,44 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                         key={objective.id}
                         className="border rounded p-3 d-flex justify-content-between align-items-start flex-wrap gap-2"
                       >
-                        <div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
                           <div className="mb-2">
                             <Badge bg="secondary">{objective.bloomLevel}</Badge>
                           </div>
-                          <p className="mb-0">{objective.description}</p>
+
+                          <p className="mb-3">{objective.description}</p>
+
+                          <div>
+                            <h6 className="mb-2">Mapped SRCH Content</h6>
+
+                            {objective.mappings.length > 0 ? (
+                              <div className="d-flex flex-column gap-2">
+                                {objective.mappings.map((mapping) => (
+                                  <div
+                                    key={mapping.id}
+                                    className="border rounded p-2 bg-light"
+                                  >
+                                    <div className="fw-semibold">
+                                      {mapping.srchContent.title}
+                                    </div>
+                                    <div className="text-muted small">
+                                      Topic: {mapping.srchContent.topic ?? 'Uncategorized'}
+                                    </div>
+                                    {mapping.srchContent.summary && (
+                                      <div className="small mt-1">
+                                        {mapping.srchContent.summary}
+                                      </div>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p className="text-muted mb-0">No SRCH content mapped yet.</p>
+                            )}
+                          </div>
                         </div>
 
-                        <div className="d-flex gap-2">
+                        <div className="d-flex gap-2 flex-wrap">
                           <Button
                             size="sm"
                             variant="outline-secondary"
@@ -196,7 +236,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                           <Button
                             size="sm"
                             variant="outline-primary"
-                            href="/srch"
+                            href={`/srch?courseId=${course.id}&objectiveId=${objective.id}`}
                           >
                             Map SRCH Content
                           </Button>
@@ -208,7 +248,8 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                   <div className="text-center py-3">
                     <h5 className="mb-2">No learning objectives yet</h5>
                     <p className="text-muted mb-3">
-                      Start by adding learning objectives for this course. You’ll use them to map SRCH topics and build your curriculum path.
+                      Start by adding learning objectives for this course. You’ll use them to map
+                      SRCH topics and build your curriculum path.
                     </p>
                     <Button variant="primary" href={`/courses/${course.id}/objectives/new`}>
                       Add Your First Objective
