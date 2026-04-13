@@ -24,15 +24,17 @@ const Home = () => (
               curated content into a course-ready curriculum path.
             </p>
             <div className="d-flex gap-3 mt-4">
-              <Button href="/courses" variant="primary" size="lg">
+              <p className="lead">
+                Sign In or Create an Account to:
+              </p>
+              <Button variant="primary" size="lg">
                 Create a Course
               </Button>
-              <Button href="/srch" variant="outline-primary" size="lg">
+              <Button variant="outline-primary" size="lg">
                 Browse SRCH Content
               </Button>
-            </div>
+              </div>
           </Col>
-
           <Col md={5} className="mt-4 mt-md-0">
             <Card className="shadow-sm border-0">
               <CardBody>
