@@ -39,7 +39,7 @@ const SignUpPage = () => {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Unable to create account.');
+        setError(data.error);
         return;
       }
 
