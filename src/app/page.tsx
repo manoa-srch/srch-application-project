@@ -1,4 +1,4 @@
-import Button from 'react-bootstrap/Button';
+// import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import CardBody from 'react-bootstrap/CardBody';
 import CardText from 'react-bootstrap/CardText';
@@ -23,7 +23,7 @@ const Home = () => (
               Define learning objectives, browse SRCH topics, and organize
               curated content into a course-ready curriculum path.
             </p>
-            <div className="d-flex gap-3 mt-4">
+            {/* <div className="d-flex gap-3 mt-4">
               <p className="lead">
                 Sign In or Create an Account to:
               </p>
@@ -33,7 +33,7 @@ const Home = () => (
               <Button variant="outline-primary" size="lg">
                 Browse SRCH Content
               </Button>
-              </div>
+              </div> */}
           </Col>
           <Col md={5} className="mt-4 mt-md-0">
             <Card className="shadow-sm border-0">
