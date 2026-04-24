@@ -99,7 +99,6 @@ const CoursePage = async ({ params }: CoursePageProps) => {
           </Col>
         </Row>
 
-        {/* ✅ Course Overview (now full width) */}
         <Row className="g-4 mb-4">
           <Col lg={12}>
             <Card className="shadow-sm h-100">
@@ -156,89 +155,84 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                 {course.objectives.length > 0 ? (
                   <div className="d-flex flex-column gap-3">
                     {course.objectives.map((objective) => (
-                      <div
-                        key={objective.id}
-                        className="border rounded p-3 d-flex justify-content-between align-items-start flex-wrap gap-2"
-                      >
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div className="mb-2">
-                            <Badge bg="secondary">{objective.bloomLevel}</Badge>
-                          </div>
-
-                          <p className="mb-3">{objective.description}</p>
-
+                      <details key={objective.id} className="border rounded p-3">
+                        <summary className="d-flex justify-content-between align-items-center gap-3">
                           <div>
-                            <h6 className="mb-2">Mapped SRCH Content</h6>
-
-                            {objective.mappings.length > 0 ? (
-                              <div className="d-flex flex-column gap-2">
-                                {objective.mappings.map((mapping) => (
-                                  <div
-                                    key={mapping.id}
-                                    className="border rounded p-2 bg-light"
-                                  >
-                                    <div className="fw-semibold">
-                                      {mapping.srchContent.title}
-                                    </div>
-
-                                    <div className="text-muted small mb-1">
-                                      Topic: {mapping.srchContent.topic ?? 'Uncategorized'}
-                                    </div>
-
-                                    {mapping.srchContent.summary && (
-                                      <div className="small mb-2">
-                                        {mapping.srchContent.summary}
-                                      </div>
-                                    )}
-
-                                    <div className="border-top pt-2 mt-2">
-                                      <div className="small text-muted mb-1">Instructor Notes</div>
-
-                                      <form action={updateMappingNote}>
-                                        <input type="hidden" name="mappingId" value={mapping.id} />
-                                        <input type="hidden" name="courseId" value={course.id} />
-
-                                        <textarea
-                                          name="alignmentNote"
-                                          defaultValue={mapping.alignmentNote ?? ''}
-                                          className="form-control form-control-sm mb-2"
-                                          rows={2}
-                                          placeholder="Describe how you are using this SRCH content in your course..."
-                                        />
-
-                                        <div className="d-flex justify-content-end">
-                                          <Button type="submit" size="sm" variant="outline-primary">
-                                            Save Notes
-                                          </Button>
-                                        </div>
-                                      </form>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="text-muted mb-0">No SRCH content mapped yet.</p>
-                            )}
+                            <Badge bg="secondary" className="me-2">
+                              {objective.bloomLevel}
+                            </Badge>
+                            <span>{objective.description}</span>
                           </div>
-                        </div>
 
-                        <div className="d-flex gap-2 flex-wrap">
-                          <Button
-                            size="sm"
-                            variant="outline-secondary"
-                            href={`/courses/${course.id}/objectives/${objective.id}/edit`}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline-primary"
-                            href={`/srch?courseId=${course.id}&objectiveId=${objective.id}`}
-                          >
-                            Map SRCH Content
-                          </Button>
+                          <span className="text-muted small">
+                            {objective.mappings.length} mapped
+                          </span>
+                        </summary>
+
+                        <div className="mt-3">
+                          <div className="d-flex gap-2 flex-wrap mb-3">
+                            <Button
+                              size="sm"
+                              variant="outline-secondary"
+                              href={`/courses/${course.id}/objectives/${objective.id}/edit`}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline-primary"
+                              href={`/srch?courseId=${course.id}&objectiveId=${objective.id}`}
+                            >
+                              Map SRCH Content
+                            </Button>
+                          </div>
+
+                          <h6 className="mb-2">Mapped SRCH Content</h6>
+
+                          {objective.mappings.length > 0 ? (
+                            <div className="d-flex flex-column gap-2">
+                              {objective.mappings.map((mapping) => (
+                                <div key={mapping.id} className="border rounded p-2 bg-light">
+                                  <div className="fw-semibold">{mapping.srchContent.title}</div>
+
+                                  <div className="text-muted small mb-1">
+                                    Topic: {mapping.srchContent.topic ?? 'Uncategorized'}
+                                  </div>
+
+                                  {mapping.srchContent.summary && (
+                                    <div className="small mb-2">{mapping.srchContent.summary}</div>
+                                  )}
+
+                                  <div className="border-top pt-2 mt-2">
+                                    <div className="small text-muted mb-1">Instructor Notes</div>
+
+                                    <form action={updateMappingNote}>
+                                      <input type="hidden" name="mappingId" value={mapping.id} />
+                                      <input type="hidden" name="courseId" value={course.id} />
+
+                                      <textarea
+                                        name="alignmentNote"
+                                        defaultValue={mapping.alignmentNote ?? ''}
+                                        className="form-control form-control-sm mb-2"
+                                        rows={2}
+                                        placeholder="Describe how you are using this SRCH content in your course..."
+                                      />
+
+                                      <div className="d-flex justify-content-end">
+                                        <Button type="submit" size="sm" variant="outline-primary">
+                                          Save Notes
+                                        </Button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-muted mb-0">No SRCH content mapped yet.</p>
+                          )}
                         </div>
-                      </div>
+                      </details>
                     ))}
                   </div>
                 ) : (

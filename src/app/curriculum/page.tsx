@@ -25,10 +25,8 @@ const CurriculumPage = async () => {
   }
 
   const courses = await prisma.course.findMany({
-    where: {
-      ownerId: user.id,
-    },
     include: {
+      owner: true,
       objectives: {
         include: {
           mappings: true,
@@ -40,26 +38,37 @@ const CurriculumPage = async () => {
     },
   });
 
+  const activeCurriculums = courses.filter((course) => {
+    const mappedContentCount = course.objectives.reduce(
+      (total, objective) => total + objective.mappings.length,
+      0,
+    );
+
+    return course.objectives.length > 0 && mappedContentCount > 0;
+  });
+
   return (
     <main>
       <Container className="py-4">
         <Row className="align-items-center mb-4">
           <Col>
-            <h1 className="fw-bold">Curriculum</h1>
+            <h1 className="fw-bold">Curriculum Gallery</h1>
             <p className="text-muted mb-0">
-              View course-ready curriculum plans built from your mapped learning objectives and SRCH content.
+              Browse active curriculum plans created by instructors and see how they map learning
+              objectives to SRCH content.
             </p>
           </Col>
         </Row>
 
-        {courses.length === 0 ? (
+        {activeCurriculums.length === 0 ? (
           <Row>
             <Col lg={8}>
               <Card className="shadow-sm">
                 <CardBody className="p-4 text-center">
-                  <h4 className="mb-3">No curriculum paths yet</h4>
+                  <h4 className="mb-3">No active curriculum paths yet</h4>
                   <p className="text-muted mb-4">
-                    Create a course, add learning objectives, and map SRCH content to generate a curriculum view.
+                    Create a course, add objectives, and map SRCH content to publish an active
+                    curriculum view.
                   </p>
                   <Button variant="primary" href="/courses/new">
                     Create Your First Course
@@ -70,13 +79,13 @@ const CurriculumPage = async () => {
           </Row>
         ) : (
           <Row className="g-4">
-            {courses.map((course) => {
+            {activeCurriculums.map((course) => {
               const mappedContentCount = course.objectives.reduce(
                 (total, objective) => total + objective.mappings.length,
                 0,
               );
 
-              const isReady = course.objectives.length > 0 && mappedContentCount > 0;
+              const isOwner = course.ownerId === user.id;
 
               return (
                 <Col key={course.id} md={6} lg={4}>
@@ -84,16 +93,21 @@ const CurriculumPage = async () => {
                     <CardBody className="p-4 d-flex flex-column h-100">
                       <div className="d-flex justify-content-between align-items-start mb-2">
                         <h5 className="mb-0">{course.title}</h5>
-                        <Badge bg={isReady ? 'success' : 'secondary'}>
-                          {isReady ? 'Ready' : 'Incomplete'}
+                        <Badge bg={isOwner ? 'primary' : 'success'}>
+                          {isOwner ? 'Mine' : 'Shared'}
                         </Badge>
                       </div>
 
-                      <p className="text-muted mb-2">{course.code ?? 'No course code'}</p>
+                      <p className="text-muted mb-1">{course.code ?? 'No course code'}</p>
+
+                      <p className="small text-muted mb-2">
+                        By {course.owner.name ?? course.owner.email}
+                      </p>
 
                       <p
                         className="text-muted"
                         style={{
+                          whiteSpace: 'pre-line',
                           display: '-webkit-box',
                           WebkitLineClamp: 4,
                           WebkitBoxOrient: 'vertical',
@@ -120,13 +134,15 @@ const CurriculumPage = async () => {
                           View Curriculum
                         </Button>
 
-                        <Button
-                          size="sm"
-                          variant="outline-secondary"
-                          href={`/courses/${course.id}`}
-                        >
-                          Manage Course
-                        </Button>
+                        {isOwner && (
+                          <Button
+                            size="sm"
+                            variant="outline-secondary"
+                            href={`/courses/${course.id}`}
+                          >
+                            Manage Course
+                          </Button>
+                        )}
                       </div>
                     </CardBody>
                   </Card>
