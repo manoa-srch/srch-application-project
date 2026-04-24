@@ -75,6 +75,24 @@ const SRCHTopicPage = async ({ params, searchParams }: SRCHTopicPageProps) => {
     orderBy: {
       title: 'asc',
     },
+    include: {
+      mappings: {
+        where: {
+          isSelected: true,
+        },
+        include: {
+          learningObjective: {
+            include: {
+              course: {
+                include: {
+                  owner: true,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   });
 
   if (contents.length === 0) {
@@ -147,7 +165,47 @@ const SRCHTopicPage = async ({ params, searchParams }: SRCHTopicPageProps) => {
                       `${content.body.slice(0, 140)}${content.body.length > 140 ? '...' : ''}`}
                   </p>
 
-                  <div className="d-flex gap-2 mt-auto flex-wrap">
+                  <div className="mt-3">
+                    <h6 className="small text-muted mb-2">Used in Courses</h6>
+
+                    {content.mappings.length > 0 ? (
+                      <div className="d-flex flex-column gap-2">
+                        {content.mappings.slice(0, 3).map((mapping) => (
+                          <div key={mapping.id} className="border rounded p-2 bg-light">
+                            <div className="small fw-semibold">
+                              {mapping.learningObjective.description}
+                            </div>
+
+                            <div className="small text-muted">
+                              Course: {mapping.learningObjective.course.title}
+                            </div>
+
+                            <div className="small text-muted">
+                              Author:{' '}
+                              {mapping.learningObjective.course.owner.name ??
+                                mapping.learningObjective.course.owner.email}
+                            </div>
+
+                            <div className="mt-1">
+                              <Button
+                                size="sm"
+                                variant="outline-secondary"
+                                href={`/courses/${mapping.learningObjective.course.id}`}
+                              >
+                                View Course
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="small text-muted fst-italic">
+                        Not yet used in any courses.
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="d-flex gap-2 mt-3 flex-wrap">
                     <Button size="sm" variant="primary">
                       View Content
                     </Button>
