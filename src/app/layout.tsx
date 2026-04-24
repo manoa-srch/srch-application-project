@@ -35,7 +35,9 @@ export default function RootLayout({
        <Providers>
           <BootstrapClient />
           <NavBar />
-          {children}
+          <div style={{ paddingTop: '90px' }}>
+            {children}
+          </div>
           <Footer />
         </Providers>
       </body>
