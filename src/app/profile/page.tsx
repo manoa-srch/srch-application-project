@@ -28,7 +28,7 @@ const ProfilePage = async () => {
   }
 
   return (
-    <main style={{ paddingTop: '90px' }}>
+    <main>
       <Container className="py-4">
         <Row className="mb-4">
           <Col md={8}>

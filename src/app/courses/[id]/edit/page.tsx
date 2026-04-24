@@ -49,7 +49,7 @@ const EditCoursePage = async ({ params }: EditCoursePageProps) => {
   }
 
   return (
-    <main style={{ paddingTop: '90px' }}>
+    <main>
       <Container className="py-4">
         <Row className="mb-4">
           <Col lg={8}>
