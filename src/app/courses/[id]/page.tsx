@@ -66,8 +66,6 @@ const CoursePage = async ({ params }: CoursePageProps) => {
     redirect('/profile');
   }
 
-  const hasProposedContribution = Boolean(course.propTopic || course.propSubtopic);
-
   return (
     <main>
       <Container className="py-4">
@@ -98,47 +96,16 @@ const CoursePage = async ({ params }: CoursePageProps) => {
           </Col>
         </Row>
 
+        {/* ✅ Course Overview (now full width) */}
         <Row className="g-4 mb-4">
-          <Col lg={8}>
-            <Card className="shadow-sm h-100">
-              <div className="p-4">
-                <h4 className="mb-3">SRCH Alignment</h4>
-
-                <div className="mb-3">
-                  <strong className="me-2">Topic:</strong>
-                  <Badge bg="secondary">{course.topic ?? 'Not specified'}</Badge>
-                </div>
-
-                <div className="mb-3">
-                  <strong className="me-2">Subtopic:</strong>
-                  <Badge bg="light" text="dark">
-                    {course.subtopic ?? 'Not specified'}
-                  </Badge>
-                </div>
-
-                {!hasProposedContribution ? (
-                  <p className="text-muted mb-0">
-                    This course is currently aligned to an existing SRCH topic and subtopic.
-                  </p>
-                ) : (
-                  <div className="border rounded p-3 bg-light">
-                    <h5 className="mb-2">Proposed Contribution</h5>
-                    <p className="mb-1">
-                      <strong>Proposed Topic:</strong> {course.propTopic ?? 'None'}
-                    </p>
-                    <p className="mb-0">
-                      <strong>Proposed Subtopic:</strong> {course.propSubtopic ?? 'None'}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </Col>
-
-          <Col lg={4}>
+          <Col lg={12}>
             <Card className="shadow-sm h-100">
               <div className="p-4">
                 <h5 className="mb-3">Course Overview</h5>
+
+                <p className="text-muted mb-3">
+                  Define learning objectives for this course and map them to SRCH content.
+                </p>
 
                 <p className="mb-2">
                   <strong>Objectives:</strong> {course.objectives.length}
@@ -163,6 +130,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
           </Col>
         </Row>
 
+        {/* Objectives Header */}
         <Row className="mb-3">
           <Col className="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h3 className="mb-0">Learning Objectives</h3>
@@ -177,6 +145,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
           </Col>
         </Row>
 
+        {/* Objectives List */}
         <Row>
           <Col>
             <Card className="shadow-sm">
@@ -274,7 +243,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                     <h5 className="mb-2">No learning objectives yet</h5>
                     <p className="text-muted mb-3">
                       Start by adding learning objectives for this course. You’ll use them to map
-                      SRCH topics and build your curriculum path.
+                      SRCH content and build your curriculum path.
                     </p>
                     <Button variant="primary" href={`/courses/${course.id}/objectives/new`}>
                       Add Your First Objective

@@ -65,20 +65,26 @@ export async function createObjective(formData: FormData) {
     throw new Error('Position must be a valid number.');
   }
 
-  await prisma.learningObjective.create({
-    data: {
-      description,
-      bloomLevel: bloomLevel as
-        | 'REMEMBER'
-        | 'UNDERSTAND'
-        | 'APPLY'
-        | 'ANALYZE'
-        | 'EVALUATE'
-        | 'CREATE',
-      position,
-      courseId,
-    },
-  });
+  const objective = await prisma.learningObjective.create({
+  data: {
+    description,
+    bloomLevel: bloomLevel as
+      | 'REMEMBER'
+      | 'UNDERSTAND'
+      | 'APPLY'
+      | 'ANALYZE'
+      | 'EVALUATE'
+      | 'CREATE',
+    position,
+    courseId,
+  },
+});
 
-  redirect(`/courses/${courseId}`);
+const intent = formData.get('intent')?.toString();
+
+if (intent === 'saveAndMap') {
+  redirect(`/srch?courseId=${courseId}&objectiveId=${objective.id}`);
+}
+
+redirect(`/courses/${courseId}`);
 }

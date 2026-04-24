@@ -88,10 +88,15 @@ const ObjectiveForm = ({
       />
     </div>
 
-    <div className="d-flex gap-2">
-      <Button type="submit" variant="primary">
+    <div className="d-flex gap-2 flex-wrap">
+      <Button type="submit" name="intent" value="save" variant="primary">
         {submitText}
       </Button>
+
+      <Button type="submit" name="intent" value="saveAndMap" variant="outline-primary">
+        Save & Map SRCH Content
+      </Button>
+
       <Button href={cancelHref} variant="outline-secondary">
         Cancel
       </Button>
