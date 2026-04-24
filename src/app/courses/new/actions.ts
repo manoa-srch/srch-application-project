@@ -22,10 +22,6 @@ export async function createCourse(formData: FormData) {
   const title = formData.get('title')?.toString().trim() ?? '';
   const code = formData.get('code')?.toString().trim() ?? '';
   const description = formData.get('description')?.toString().trim() ?? '';
-  const topic = formData.get('topic')?.toString().trim() ?? '';
-  const subtopic = formData.get('subtopic')?.toString().trim() ?? '';
-  const propTopic = formData.get('propTopic')?.toString().trim() ?? '';
-  const propSubtopic = formData.get('propSubtopic')?.toString().trim() ?? '';
 
   if (!title) {
     throw new Error('Course title is required.');
@@ -36,10 +32,6 @@ export async function createCourse(formData: FormData) {
       title,
       code: code || null,
       description: description || null,
-      topic: topic || null,
-      subtopic: subtopic || null,
-      propTopic: propTopic || null,
-      propSubtopic: propSubtopic || null,
       ownerId: user.id,
     },
   });

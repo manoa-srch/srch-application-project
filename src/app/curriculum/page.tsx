@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
 const CurriculumPage = () => (
-  <main style={{ paddingTop: '90px' }}>
+  <main>
     <Container className="py-4">
       <Row className="mb-4">
         <Col>

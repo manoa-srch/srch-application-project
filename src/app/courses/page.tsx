@@ -40,7 +40,7 @@ const CoursesPage = async () => {
   });
 
   return (
-    <main style={{ paddingTop: '90px' }}>
+    <main>
       <Container className="py-4">
         <Row className="align-items-center mb-4">
           <Col>
