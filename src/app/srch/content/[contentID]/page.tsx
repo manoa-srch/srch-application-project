@@ -107,7 +107,7 @@ const SRCHContentPage = async ({ params, searchParams }: SRCHContentPageProps) =
     : '/srch';
 
   return (
-    <main style={{ paddingTop: '90px' }}>
+    <main>
       <Container className="py-4">
         <Row className="align-items-start mb-4">
           <Col lg={8}>

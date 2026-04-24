@@ -103,7 +103,7 @@ const SRCHTopicPage = async ({ params, searchParams }: SRCHTopicPageProps) => {
     courseId && objectiveId ? `?courseId=${courseId}&objectiveId=${objectiveId}` : '';
 
   return (
-    <main style={{ paddingTop: '90px' }}>
+    <main>
       <Container className="py-4">
         <Row className="align-items-start mb-4">
           <Col lg={8}>

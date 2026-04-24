@@ -69,7 +69,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
   const hasProposedContribution = Boolean(course.propTopic || course.propSubtopic);
 
   return (
-    <main style={{ paddingTop: '90px' }}>
+    <main>
       <Container className="py-4">
         <Row className="align-items-start mb-4">
           <Col md={8}>
