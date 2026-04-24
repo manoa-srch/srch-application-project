@@ -82,7 +82,15 @@ const CurriculumCoursePage = async ({ params }: CurriculumCoursePageProps) => {
 
             <h1 className="fw-bold mb-1">{course.title} Curriculum</h1>
             <p className="text-muted mb-2">{course.code ?? 'No course code'}</p>
-            <p className="mb-0">
+            <p 
+                className="mb-0"
+                style={{
+                whiteSpace: 'pre-line',
+                display: '-webkit-box',
+                WebkitLineClamp: 5,
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+            }}>
               {course.description ?? 'No course description has been added yet.'}
             </p>
           </Col>
