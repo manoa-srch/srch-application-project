@@ -8,6 +8,7 @@ import Row from 'react-bootstrap/Row';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { mapContentToObjective } from '../../actions';
+import ReactMarkdown from 'react-markdown';
 
 type SRCHContentPageProps = {
   params: Promise<{
@@ -174,7 +175,7 @@ const SRCHContentPage = async ({ params, searchParams }: SRCHContentPageProps) =
                 <hr />
 
                 <h4 className="mb-3">Full Content</h4>
-                <p style={{ whiteSpace: 'pre-line' }}>{content.body}</p>
+                <ReactMarkdown>{content.body}</ReactMarkdown>
               </div>
             </Card>
           </Col>
