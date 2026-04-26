@@ -103,7 +103,7 @@ const SRCHTopicPage = async ({ params, searchParams }: SRCHTopicPageProps) => {
     courseId && objectiveId ? `?courseId=${courseId}&objectiveId=${objectiveId}` : '';
 
   return (
-    <main style={{ paddingTop: '90px' }}>
+    <main>
       <Container className="py-4">
         <Row className="align-items-start mb-4">
           <Col lg={8}>
@@ -206,7 +206,13 @@ const SRCHTopicPage = async ({ params, searchParams }: SRCHTopicPageProps) => {
                   </div>
 
                   <div className="d-flex gap-2 mt-3 flex-wrap">
-                    <Button size="sm" variant="primary">
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      href={`/srch/content/${content.id}${
+                        courseId && objectiveId ? `?courseId=${courseId}&objectiveId=${objectiveId}` : ''
+                      }`}
+                    >
                       View Content
                     </Button>
 
