@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { deleteCourse } from './actions';
+import { deleteCourse, updateMappingNote } from './actions';
 
 type CoursePageProps = {
   params: Promise<{
@@ -208,14 +208,39 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                                     <div className="fw-semibold">
                                       {mapping.srchContent.title}
                                     </div>
-                                    <div className="text-muted small">
+
+                                    <div className="text-muted small mb-1">
                                       Topic: {mapping.srchContent.topic ?? 'Uncategorized'}
                                     </div>
+
                                     {mapping.srchContent.summary && (
-                                      <div className="small mt-1">
+                                      <div className="small mb-2">
                                         {mapping.srchContent.summary}
                                       </div>
                                     )}
+
+                                    <div className="border-top pt-2 mt-2">
+                                      <div className="small text-muted mb-1">Instructor Notes</div>
+
+                                      <form action={updateMappingNote}>
+                                        <input type="hidden" name="mappingId" value={mapping.id} />
+                                        <input type="hidden" name="courseId" value={course.id} />
+
+                                        <textarea
+                                          name="alignmentNote"
+                                          defaultValue={mapping.alignmentNote ?? ''}
+                                          className="form-control form-control-sm mb-2"
+                                          rows={2}
+                                          placeholder="Describe how you are using this SRCH content in your course..."
+                                        />
+
+                                        <div className="d-flex justify-content-end">
+                                          <Button type="submit" size="sm" variant="outline-primary">
+                                            Save Notes
+                                          </Button>
+                                        </div>
+                                      </form>
+                                    </div>
                                   </div>
                                 ))}
                               </div>
