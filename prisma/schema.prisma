@@ -17,7 +17,10 @@ model User {
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
   courses   Course[]
-  contents  SRCHContent[]
+  contents  SRCHContent[] @relation("UserContents")
+  forumPosts    ForumPost[] @relation("UserForumPosts")
+  forumComments ForumComment[] @relation("UserForumComments")
+  forumVotes    ForumVote[]   @relation("UserForumVotes")
 }
 
 model Course {
@@ -44,6 +47,7 @@ model LearningObjective {
   courseId    Int
   course      Course                @relation(fields: [courseId], references: [id], onDelete: Cascade)
   mappings    ObjectiveContentMap[]
+  forumPosts  ForumPost[]
 }
 
 model SRCHContent {
@@ -56,7 +60,7 @@ model SRCHContent {
   updatedAt DateTime              @updatedAt
   authorId  Int?
   mappings  ObjectiveContentMap[]
-  author    User?                 @relation(fields: [authorId], references: [id])
+  author    User?                 @relation( "UserContents", fields: [authorId], references: [id])
 }
 
 model ObjectiveContentMap {
@@ -86,4 +90,48 @@ enum BloomLevel {
   ANALYZE
   EVALUATE
   CREATE
+}
+
+model ForumPost {
+  id          Int           @id @default(autoincrement())
+  title       String
+  description String
+  bloomLevel  BloomLevel?
+  status      ForumStatus   @default(PENDING)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  authorId    Int
+  author      User          @relation("UserForumPosts", fields: [authorId], references: [id], onDelete: Cascade)
+  comments    ForumComment[]
+  votes       ForumVote[]
+ 
+  mappedObjectiveId Int?
+  mappedObjective   LearningObjective?    @relation(fields: [mappedObjectiveId], references: [id])
+}
+
+model ForumComment {
+  id        Int       @id @default(autoincrement())
+  body      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  authorId  Int
+  postId    Int
+  author    User      @relation("UserForumComments", fields: [authorId], references: [id], onDelete: Cascade)
+  post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model ForumVote {
+  id        Int       @id @default(autoincrement())
+  authorId  Int
+  postId    Int
+  author    User      @relation("UserForumVotes", fields: [authorId], references: [id], onDelete: Cascade)
+  post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([authorId, postId]) 
+}
+
+enum ForumStatus {
+  PENDING   
+  MAPPED    
+  REJECTED 
 }

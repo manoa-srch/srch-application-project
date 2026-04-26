@@ -12,6 +12,7 @@ import {
   Book,
   Collection,
   JournalText,
+  ChatSquareText,
 } from 'react-bootstrap-icons';
 
 const NavBar: React.FC = () => {
@@ -71,7 +72,16 @@ const NavBar: React.FC = () => {
                   <JournalText className="me-1" />
                   Curriculum
                 </Nav.Link>
+                <Nav.Link
+                  id="forum-nav"
+                  href="/forum"
+                  active={pathName.startsWith('/forum')}
+                >
+                  <ChatSquareText className="me-1" />
+                  Forum
+              </Nav.Link>
               </>
+
             )}
 
             {/* ADMIN / EDITOR */}
