@@ -2,6 +2,7 @@ import { Col, Container, Row, Table, Badge } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
 
 const ForumPage = async () => {
   const session = await auth();
@@ -34,6 +35,7 @@ const ForumPage = async () => {
 
   return (
     <main>
+      
       <Container id="forum" fluid className="py-3 mt-5 pt-4">
 
         {/* ── Header ── */}
@@ -46,9 +48,9 @@ const ForumPage = async () => {
             </p>
           </Col>
           <Col xs="auto" className="d-flex align-items-center">
-            <a href="/forum/new" className="btn btn-success">
+            <Link href="/forum/new" className="btn btn-success">
               + New Objective
-            </a>
+            </Link>
           </Col>
         </Row>
 
