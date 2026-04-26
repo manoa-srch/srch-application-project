@@ -1,15 +1,75 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+model User {
+  id        Int           @id @default(autoincrement())
+  email     String        @unique
+  password  String
+  firstName String
+  lastName  String
+  name      String?
+  role      Role          @default(INSTRUCTOR)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  courses   Course[]
+  contents  SRCHContent[]
+}
+
+model Course {
+  id           Int                 @id @default(autoincrement())
+  title        String
+  code         String?
+  description  String?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  ownerId      Int
+  topic        String?
+  subtopic     String?
+  propTopic    String?
+  propSubtopic String?
+  owner        User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  objectives   LearningObjective[]
+}
+
+model LearningObjective {
+  id          Int                   @id @default(autoincrement())
+  description String
+  bloomLevel  BloomLevel
+  position    Int?
+  courseId    Int
+  course      Course                @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  mappings    ObjectiveContentMap[]
+}
+
+model SRCHContent {
+  id        Int                   @id @default(autoincrement())
+  title     String
+  summary   String?
+  body      String
+  topic     String?
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  authorId  Int?
+  mappings  ObjectiveContentMap[]
+  author    User?                 @relation(fields: [authorId], references: [id])
+}
+
+model ObjectiveContentMap {
+  id                  Int               @id @default(autoincrement())
+  alignmentNote       String?
+  isSelected          Boolean           @default(false)
+  createdAt           DateTime          @default(now())
+  learningObjectiveId Int
+  srchContentId       Int
+  learningObjective   LearningObjective @relation(fields: [learningObjectiveId], references: [id], onDelete: Cascade)
+  srchContent         SRCHContent       @relation(fields: [srchContentId], references: [id], onDelete: Cascade)
+
+  @@unique([learningObjectiveId, srchContentId])
 }
 
 enum Role {
@@ -26,79 +86,4 @@ enum BloomLevel {
   ANALYZE
   EVALUATE
   CREATE
-}
-
-model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique
-  password     String
-  firstName    String
-  lastName     String
-  name         String?
-  role         Role     @default(INSTRUCTOR)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  courses      Course[]
-  contents     SRCHContent[]
-}
-
-model Course {
-  id           Int      @id @default(autoincrement())
-  title        String
-  code         String?
-  description  String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  ownerId      Int
-  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-
-  objectives   LearningObjective[]
-  topic        String?
-  subtopic     String?
-  propTopic    String?
-  propSubtopic String?  
-}
-
-model LearningObjective {
-  id          Int        @id @default(autoincrement())
-  description String
-  bloomLevel  BloomLevel
-  position    Int?
-
-  courseId    Int
-  course      Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
-
-  mappings    ObjectiveContentMap[]
-}
-
-model SRCHContent {
-  id          Int      @id @default(autoincrement())
-  title       String
-  summary     String?
-  body        String   @db.Text
-  topic       String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  authorId    Int?
-  author      User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
-
-  mappings    ObjectiveContentMap[]
-}
-
-model ObjectiveContentMap {
-  id                  Int      @id @default(autoincrement())
-  alignmentNote       String?
-  isSelected          Boolean  @default(false)
-  createdAt           DateTime @default(now())
-
-  learningObjectiveId Int
-  srchContentId       Int
-
-  learningObjective   LearningObjective @relation(fields: [learningObjectiveId], references: [id], onDelete: Cascade)
-  srchContent         SRCHContent       @relation(fields: [srchContentId], references: [id], onDelete: Cascade)
-
-  @@unique([learningObjectiveId, srchContentId])
 }
