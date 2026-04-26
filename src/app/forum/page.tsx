@@ -34,7 +34,7 @@ const ForumPage = async () => {
 
   return (
     <main>
-      <Container id="forum" fluid className="py-3">
+      <Container id="forum" fluid className="py-3 mt-5 pt-4">
 
         {/* ── Header ── */}
         <Row className="mb-3">

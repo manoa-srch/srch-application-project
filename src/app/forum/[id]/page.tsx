@@ -38,7 +38,7 @@ const ForumPostPage = async ({ params }: { params: { id: string } }) => {
 
   return (
     <main>
-      <Container className="py-3">
+      <Container className="py-5 mt-5 pt-4">
 
         {/* ── Back link ── */}
         <Row className="mb-3">
