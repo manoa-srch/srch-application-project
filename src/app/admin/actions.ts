@@ -30,10 +30,11 @@ export async function adminUpdateUser(formData: FormData) {
   const lastName = formData.get('lastName')?.toString().trim();
   const email = formData.get('email')?.toString().trim();
   const name = formData.get('name')?.toString().trim();
+  const role = formData.get('role')?.toString().trim();
 
   // Only include fields that were actually provided
   const data = Object.fromEntries(
-    Object.entries({ firstName, lastName, email, name })
+    Object.entries({ firstName, lastName, email, name, role })
           .filter(([, v]) => v !== undefined && v !== '')
   );
 
@@ -65,11 +66,7 @@ export async function adminCreateUser(formData: FormData) {
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) throw new Error('A user with this email already exists.');
 
-  // Validate role against the Role enum and cast to Role for Prisma
-  const validRoles = Object.values(Role) as string[];
-  if (!validRoles.includes(roleRaw)) throw new Error('Invalid role.');
-  const role = roleRaw as Role;
-
+ 
   const hashedPassword = await hash(password, 12);
 
   await prisma.user.create({
@@ -79,7 +76,7 @@ export async function adminCreateUser(formData: FormData) {
       firstName,
       lastName,
       name: `${firstName} ${lastName}`,
-      role,
+      role: roleRaw as Role,
     },
   });
 
