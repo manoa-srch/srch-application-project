@@ -44,10 +44,10 @@ export async function adminUpdateUser(formData: FormData) {
     data,
   });
 
-  redirect('/admin/users');
+  redirect('/admin');
 }
 
-// Create a new user
+// Create a new user with specified role
 export async function adminCreateUser(formData: FormData) {
   await requireAdmin();
 
@@ -55,13 +55,20 @@ export async function adminCreateUser(formData: FormData) {
   const password = formData.get('password')?.toString();
   const firstName = formData.get('firstName')?.toString().trim() ?? '';
   const lastName = formData.get('lastName')?.toString().trim() ?? '';
+  const roleRaw = formData.get('role')?.toString().trim() ?? '';
 
   if (!email || !password) throw new Error('Email and password are required.');
   if (!firstName || !lastName) throw new Error('First name and last name are required.');
+  if (!roleRaw) throw new Error('Role is required.');
 
   // Check if user already exists
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) throw new Error('A user with this email already exists.');
+
+  // Validate role against the Role enum and cast to Role for Prisma
+  const validRoles = Object.values(Role) as string[];
+  if (!validRoles.includes(roleRaw)) throw new Error('Invalid role.');
+  const role = roleRaw as Role;
 
   const hashedPassword = await hash(password, 12);
 
@@ -72,10 +79,11 @@ export async function adminCreateUser(formData: FormData) {
       firstName,
       lastName,
       name: `${firstName} ${lastName}`,
+      role,
     },
   });
 
-  redirect('/admin/users');
+  redirect('/admin');
 }
 
 // Delete a user by ID
@@ -89,5 +97,5 @@ export async function adminDeleteUser(formData: FormData) {
     where: { id: Number(userID) },
   });
 
-  redirect('/admin/users');
+  redirect('/admin');
 }
