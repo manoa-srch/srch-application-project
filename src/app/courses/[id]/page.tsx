@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
-import { deleteCourse } from './actions';
+import { deleteCourse, updateMappingNote } from './actions';
 
 type CoursePageProps = {
   params: Promise<{
@@ -66,16 +66,17 @@ const CoursePage = async ({ params }: CoursePageProps) => {
     redirect('/profile');
   }
 
-  const hasProposedContribution = Boolean(course.propTopic || course.propSubtopic);
-
   return (
-    <main style={{ paddingTop: '90px' }}>
+    <main>
       <Container className="py-4">
         <Row className="align-items-start mb-4">
           <Col md={8}>
             <h1 className="fw-bold mb-1">{course.title}</h1>
             <p className="text-muted mb-2">{course.code ?? 'No course code'}</p>
-            <p className="mb-0">
+            <p
+              className="mb-0"
+              style={{ whiteSpace: 'pre-line' }}
+            >
               {course.description ?? 'No course description has been added yet.'}
             </p>
           </Col>
@@ -99,46 +100,14 @@ const CoursePage = async ({ params }: CoursePageProps) => {
         </Row>
 
         <Row className="g-4 mb-4">
-          <Col lg={8}>
-            <Card className="shadow-sm h-100">
-              <div className="p-4">
-                <h4 className="mb-3">SRCH Alignment</h4>
-
-                <div className="mb-3">
-                  <strong className="me-2">Topic:</strong>
-                  <Badge bg="secondary">{course.topic ?? 'Not specified'}</Badge>
-                </div>
-
-                <div className="mb-3">
-                  <strong className="me-2">Subtopic:</strong>
-                  <Badge bg="light" text="dark">
-                    {course.subtopic ?? 'Not specified'}
-                  </Badge>
-                </div>
-
-                {!hasProposedContribution ? (
-                  <p className="text-muted mb-0">
-                    This course is currently aligned to an existing SRCH topic and subtopic.
-                  </p>
-                ) : (
-                  <div className="border rounded p-3 bg-light">
-                    <h5 className="mb-2">Proposed Contribution</h5>
-                    <p className="mb-1">
-                      <strong>Proposed Topic:</strong> {course.propTopic ?? 'None'}
-                    </p>
-                    <p className="mb-0">
-                      <strong>Proposed Subtopic:</strong> {course.propSubtopic ?? 'None'}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </Card>
-          </Col>
-
-          <Col lg={4}>
+          <Col lg={12}>
             <Card className="shadow-sm h-100">
               <div className="p-4">
                 <h5 className="mb-3">Course Overview</h5>
+
+                <p className="text-muted mb-3">
+                  Define learning objectives for this course and map them to SRCH content.
+                </p>
 
                 <p className="mb-2">
                   <strong>Objectives:</strong> {course.objectives.length}
@@ -163,6 +132,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
           </Col>
         </Row>
 
+        {/* Objectives Header */}
         <Row className="mb-3">
           <Col className="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h3 className="mb-0">Learning Objectives</h3>
@@ -177,6 +147,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
           </Col>
         </Row>
 
+        {/* Objectives List */}
         <Row>
           <Col>
             <Card className="shadow-sm">
@@ -184,64 +155,84 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                 {course.objectives.length > 0 ? (
                   <div className="d-flex flex-column gap-3">
                     {course.objectives.map((objective) => (
-                      <div
-                        key={objective.id}
-                        className="border rounded p-3 d-flex justify-content-between align-items-start flex-wrap gap-2"
-                      >
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div className="mb-2">
-                            <Badge bg="secondary">{objective.bloomLevel}</Badge>
-                          </div>
-
-                          <p className="mb-3">{objective.description}</p>
-
+                      <details key={objective.id} className="border rounded p-3">
+                        <summary className="d-flex justify-content-between align-items-center gap-3">
                           <div>
-                            <h6 className="mb-2">Mapped SRCH Content</h6>
-
-                            {objective.mappings.length > 0 ? (
-                              <div className="d-flex flex-column gap-2">
-                                {objective.mappings.map((mapping) => (
-                                  <div
-                                    key={mapping.id}
-                                    className="border rounded p-2 bg-light"
-                                  >
-                                    <div className="fw-semibold">
-                                      {mapping.srchContent.title}
-                                    </div>
-                                    <div className="text-muted small">
-                                      Topic: {mapping.srchContent.topic ?? 'Uncategorized'}
-                                    </div>
-                                    {mapping.srchContent.summary && (
-                                      <div className="small mt-1">
-                                        {mapping.srchContent.summary}
-                                      </div>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
-                            ) : (
-                              <p className="text-muted mb-0">No SRCH content mapped yet.</p>
-                            )}
+                            <Badge bg="secondary" className="me-2">
+                              {objective.bloomLevel}
+                            </Badge>
+                            <span>{objective.description}</span>
                           </div>
-                        </div>
 
-                        <div className="d-flex gap-2 flex-wrap">
-                          <Button
-                            size="sm"
-                            variant="outline-secondary"
-                            href={`/courses/${course.id}/objectives/${objective.id}/edit`}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline-primary"
-                            href={`/srch?courseId=${course.id}&objectiveId=${objective.id}`}
-                          >
-                            Map SRCH Content
-                          </Button>
+                          <span className="text-muted small">
+                            {objective.mappings.length} mapped
+                          </span>
+                        </summary>
+
+                        <div className="mt-3">
+                          <div className="d-flex gap-2 flex-wrap mb-3">
+                            <Button
+                              size="sm"
+                              variant="outline-secondary"
+                              href={`/courses/${course.id}/objectives/${objective.id}/edit`}
+                            >
+                              Edit
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline-primary"
+                              href={`/srch?courseId=${course.id}&objectiveId=${objective.id}`}
+                            >
+                              Map SRCH Content
+                            </Button>
+                          </div>
+
+                          <h6 className="mb-2">Mapped SRCH Content</h6>
+
+                          {objective.mappings.length > 0 ? (
+                            <div className="d-flex flex-column gap-2">
+                              {objective.mappings.map((mapping) => (
+                                <div key={mapping.id} className="border rounded p-2 bg-light">
+                                  <div className="fw-semibold">{mapping.srchContent.title}</div>
+
+                                  <div className="text-muted small mb-1">
+                                    Topic: {mapping.srchContent.topic ?? 'Uncategorized'}
+                                  </div>
+
+                                  {mapping.srchContent.summary && (
+                                    <div className="small mb-2">{mapping.srchContent.summary}</div>
+                                  )}
+
+                                  <div className="border-top pt-2 mt-2">
+                                    <div className="small text-muted mb-1">Instructor Notes</div>
+
+                                    <form action={updateMappingNote}>
+                                      <input type="hidden" name="mappingId" value={mapping.id} />
+                                      <input type="hidden" name="courseId" value={course.id} />
+
+                                      <textarea
+                                        name="alignmentNote"
+                                        defaultValue={mapping.alignmentNote ?? ''}
+                                        className="form-control form-control-sm mb-2"
+                                        rows={2}
+                                        placeholder="Describe how you are using this SRCH content in your course..."
+                                      />
+
+                                      <div className="d-flex justify-content-end">
+                                        <Button type="submit" size="sm" variant="outline-primary">
+                                          Save Notes
+                                        </Button>
+                                      </div>
+                                    </form>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <p className="text-muted mb-0">No SRCH content mapped yet.</p>
+                          )}
                         </div>
-                      </div>
+                      </details>
                     ))}
                   </div>
                 ) : (
@@ -249,7 +240,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                     <h5 className="mb-2">No learning objectives yet</h5>
                     <p className="text-muted mb-3">
                       Start by adding learning objectives for this course. You’ll use them to map
-                      SRCH topics and build your curriculum path.
+                      SRCH content and build your curriculum path.
                     </p>
                     <Button variant="primary" href={`/courses/${course.id}/objectives/new`}>
                       Add Your First Objective

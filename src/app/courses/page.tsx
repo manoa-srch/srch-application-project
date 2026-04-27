@@ -40,7 +40,7 @@ const CoursesPage = async () => {
   });
 
   return (
-    <main style={{ paddingTop: '90px' }}>
+    <main>
       <Container className="py-4">
         <Row className="align-items-center mb-4">
           <Col>
@@ -96,9 +96,28 @@ const CoursesPage = async () => {
 
                       <p className="text-muted mb-2">{course.code ?? 'No course code'}</p>
 
-                      <p>
+                      <p
+                        className="text-muted"
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 5,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                      >
                         {course.description ?? 'No course description has been added yet.'}
                       </p>
+                      
+                      {course.description && course.description.length > 200 && (
+                        <Button
+                          size="sm"
+                          variant="link"
+                          className="p-0"
+                          href={`/courses/${course.id}`}
+                        >
+                          Read more
+                        </Button>
+                      )}
 
                       <p className="mb-2">
                         <strong>Objectives:</strong> {course.objectives.length}
