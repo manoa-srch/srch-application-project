@@ -42,7 +42,7 @@ export async function adminUpdateUser(formData: FormData) {
 
   await prisma.user.update({
     where: { id: Number(userID) },
-    data,
+    data: {role: Role.ADMIN},
   });
 
   redirect('/admin');
@@ -56,17 +56,17 @@ export async function adminCreateUser(formData: FormData) {
   const password = formData.get('password')?.toString();
   const firstName = formData.get('firstName')?.toString().trim() ?? '';
   const lastName = formData.get('lastName')?.toString().trim() ?? '';
-  const roleRaw = formData.get('role')?.toString().trim() ?? '';
+  const role = formData.get('role')?.toString().trim() ?? '';
 
   if (!email || !password) throw new Error('Email and password are required.');
   if (!firstName || !lastName) throw new Error('First name and last name are required.');
-  if (!roleRaw) throw new Error('Role is required.');
+  if (!role) throw new Error('Role is required.');
 
   // Check if user already exists
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) throw new Error('A user with this email already exists.');
 
- 
+
   const hashedPassword = await hash(password, 12);
 
   await prisma.user.create({
@@ -76,7 +76,7 @@ export async function adminCreateUser(formData: FormData) {
       firstName,
       lastName,
       name: `${firstName} ${lastName}`,
-      role: roleRaw as Role,
+      role: role as Role,
     },
   });
 
