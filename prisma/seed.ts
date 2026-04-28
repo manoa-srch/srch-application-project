@@ -1,7 +1,6 @@
 import { Prisma, Role } from '@prisma/client';
 import * as config from '../config/settings.development.json';
 import { prisma } from '../src/lib/prisma';
-import { hash } from 'bcryptjs';
 
 const srchContent: Prisma.SRCHContentCreateInput[] = [
   {
@@ -3238,16 +3237,15 @@ async function main() {
     const emailPrefix = account.email.split('@')[0] || 'user';
     const firstName = emailPrefix;
     const lastName = 'User';
-    const hashedPassword = await hash(account.password, 12);
+    const plainPassword = account.password || 'changeme123';
     const userData: Prisma.UserCreateInput = {
       email: account.email,
       firstName,
       lastName,
       name: `${firstName} ${lastName}`,
       role,
-      password: hashedPassword,
+      password: plainPassword,
     };
-
     console.log(`  Creating user: ${account.email} with role: ${role}`);
 
     await prisma.user.upsert({
@@ -3257,7 +3255,7 @@ async function main() {
         lastName,
         name: `${firstName} ${lastName}`,
         role,
-        password: hashedPassword,
+        password: plainPassword,
       },
       create: userData,
     });
