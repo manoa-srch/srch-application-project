@@ -79,5 +79,5 @@ export async function mapContentToObjective(formData: FormData) {
     },
   });
 
-  redirect(`/courses/${courseId}`);
+  redirect(`/srch?courseId=${courseId}&objectiveId=${objectiveId}`);
 }
