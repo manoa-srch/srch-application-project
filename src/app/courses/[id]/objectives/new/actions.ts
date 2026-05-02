@@ -50,6 +50,8 @@ export async function createObjective(formData: FormData) {
   const description = formData.get('description')?.toString().trim() ?? '';
   const bloomLevel = formData.get('bloomLevel')?.toString().trim() ?? '';
   const positionValue = formData.get('position')?.toString().trim() ?? '';
+  const templateObjectiveIdValue =
+    formData.get('templateObjectiveId')?.toString().trim() ?? '';
 
   if (!description) {
     throw new Error('Objective description is required.');
@@ -66,25 +68,61 @@ export async function createObjective(formData: FormData) {
   }
 
   const objective = await prisma.learningObjective.create({
-  data: {
-    description,
-    bloomLevel: bloomLevel as
-      | 'REMEMBER'
-      | 'UNDERSTAND'
-      | 'APPLY'
-      | 'ANALYZE'
-      | 'EVALUATE'
-      | 'CREATE',
-    position,
-    courseId,
-  },
-});
+    data: {
+      description,
+      bloomLevel: bloomLevel as
+        | 'REMEMBER'
+        | 'UNDERSTAND'
+        | 'APPLY'
+        | 'ANALYZE'
+        | 'EVALUATE'
+        | 'CREATE',
+      position,
+      courseId,
+    },
+  });
 
-const intent = formData.get('intent')?.toString();
+  const templateObjectiveId = templateObjectiveIdValue
+    ? parseInt(templateObjectiveIdValue, 10)
+    : null;
 
-if (intent === 'saveAndMap') {
-  redirect(`/srch?courseId=${courseId}&objectiveId=${objective.id}`);
-}
+  if (templateObjectiveId && !Number.isNaN(templateObjectiveId)) {
+    const templateObjective = await prisma.learningObjective.findUnique({
+      where: { id: templateObjectiveId },
+      include: {
+        mappings: {
+          where: {
+            isSelected: true,
+          },
+        },
+      },
+    });
 
-redirect(`/courses/${courseId}`);
+    if (templateObjective && templateObjective.mappings.length > 0) {
+      await prisma.learningObjective.update({
+        where: {
+          id: objective.id,
+        },
+        data: {
+          mappings: {
+            create: templateObjective.mappings.map((mapping) => ({
+              srchContentId: mapping.srchContentId,
+              isSelected: true,
+              alignmentNote: mapping.alignmentNote
+                ? `Adapted from another curriculum:\n\n${mapping.alignmentNote}`
+                : null,
+            })),
+          },
+        },
+      });
+    }
+  }
+
+  const intent = formData.get('intent')?.toString();
+
+  if (intent === 'saveAndMap') {
+    redirect(`/srch?courseId=${courseId}&objectiveId=${objective.id}`);
+  }
+
+  redirect(`/courses/${courseId}`);
 }
