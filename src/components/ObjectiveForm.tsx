@@ -17,6 +17,7 @@ export type ObjectiveFormData = {
   description?: string | null;
   bloomLevel?: string | null;
   position?: number | null;
+  templateObjectiveId?: number | null;
 };
 
 type ObjectiveFormProps = {
@@ -34,8 +35,17 @@ const ObjectiveForm = ({
 }: ObjectiveFormProps) => (
   <form action={action}>
     {initialData?.id && <input type="hidden" name="id" value={initialData.id} />}
+
     {initialData?.courseId && (
       <input type="hidden" name="courseId" value={initialData.courseId} />
+    )}
+
+    {initialData?.templateObjectiveId && (
+      <input
+        type="hidden"
+        name="templateObjectiveId"
+        value={initialData.templateObjectiveId}
+      />
     )}
 
     <div className="mb-3">

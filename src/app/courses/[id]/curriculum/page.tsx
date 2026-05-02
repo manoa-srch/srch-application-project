@@ -8,6 +8,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import UseObjectiveButton from '@/components/UseObjectiveButton';
 
 type CurriculumCoursePageProps = {
   params: Promise<{
@@ -62,6 +63,20 @@ const CurriculumCoursePage = async ({ params }: CurriculumCoursePageProps) => {
     notFound();
   }
 
+  const userCourses = await prisma.course.findMany({
+    where: {
+      ownerId: user.id,
+    },
+    orderBy: {
+      title: 'asc',
+    },
+    select: {
+      id: true,
+      title: true,
+      code: true,
+    },
+  });
+
   const mappedContentCount = course.objectives.reduce(
     (total, objective) => total + objective.mappings.length,
     0,
@@ -78,23 +93,26 @@ const CurriculumCoursePage = async ({ params }: CurriculumCoursePageProps) => {
 
             <h1 className="fw-bold mb-1">{course.title} Curriculum</h1>
             <p className="text-muted mb-2">{course.code ?? 'No course code'}</p>
-            <p 
-                className="mb-0"
-                style={{
+            <p
+              className="mb-0"
+              style={{
                 whiteSpace: 'pre-line',
                 display: '-webkit-box',
                 WebkitLineClamp: 5,
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
-            }}>
+              }}
+            >
               {course.description ?? 'No course description has been added yet.'}
             </p>
           </Col>
 
           <Col lg={4} className="text-lg-end mt-3 mt-lg-0">
-            <Button variant="primary" href={`/courses/${course.id}`}>
-              Manage Course
-            </Button>
+            {course.ownerId === user.id && (
+              <Button variant="primary" href={`/courses/${course.id}`}>
+                Manage Course
+              </Button>
+            )}
           </Col>
         </Row>
 
@@ -122,9 +140,13 @@ const CurriculumCoursePage = async ({ params }: CurriculumCoursePageProps) => {
               <CardBody>
                 <h5 className="mb-1">
                   {course.objectives.length > 0
-                    ? Math.round((course.objectives.filter((objective) => objective.mappings.length > 0).length /
-                        course.objectives.length) *
-                        100)
+                    ? Math.round(
+                        (course.objectives.filter(
+                          (objective) => objective.mappings.length > 0,
+                        ).length /
+                          course.objectives.length) *
+                          100,
+                      )
                     : 0}
                   %
                 </h5>
@@ -145,22 +167,27 @@ const CurriculumCoursePage = async ({ params }: CurriculumCoursePageProps) => {
                     {course.objectives.map((objective, index) => (
                       <div key={objective.id} className="border rounded p-3">
                         <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap mb-2">
-                            <div>
-                                <h4 className="h6 mb-1">
-                                {objective.position ?? index + 1}. {objective.description}
-                                </h4>
-                                <Badge bg="secondary">{objective.bloomLevel}</Badge>
-                            </div>
+                          <div>
+                            <h4 className="h6 mb-1">
+                              {objective.position ?? index + 1}. {objective.description}
+                            </h4>
+                            <Badge bg="secondary">{objective.bloomLevel}</Badge>
+                          </div>
 
-                            {course.ownerId === user.id && (
-                                <Button
-                                    size="sm"
-                                    variant="outline-primary"
-                                    href={`/srch?courseId=${course.id}&objectiveId=${objective.id}`}
-                                >
-                                    Map More Content
-                                </Button>
-                            )}
+                          {course.ownerId === user.id ? (
+                            <Button
+                              size="sm"
+                              variant="outline-primary"
+                              href={`/srch?courseId=${course.id}&objectiveId=${objective.id}`}
+                            >
+                              Map More Content
+                            </Button>
+                          ) : (
+                            <UseObjectiveButton
+                              sourceObjectiveId={objective.id}
+                              userCourses={userCourses}
+                            />
+                          )}
                         </div>
 
                         {objective.mappings.length > 0 ? (
@@ -168,44 +195,48 @@ const CurriculumCoursePage = async ({ params }: CurriculumCoursePageProps) => {
                             {objective.mappings.map((mapping) => (
                               <details key={mapping.id} className="border rounded p-3 bg-light">
                                 <summary className="d-flex justify-content-between align-items-center gap-2">
-                                    <div>
+                                  <div>
                                     <Badge bg="light" text="dark" className="me-2">
-                                        {mapping.srchContent.topic ?? 'Uncategorized'}
+                                      {mapping.srchContent.topic ?? 'Uncategorized'}
                                     </Badge>
-                                    <span className="fw-semibold">{mapping.srchContent.title}</span>
-                                    </div>
+                                    <span className="fw-semibold">
+                                      {mapping.srchContent.title}
+                                    </span>
+                                  </div>
                                 </summary>
 
                                 <div className="mt-3">
-                                    <p className="text-muted small mb-3">
+                                  <p className="text-muted small mb-3">
                                     {mapping.srchContent.summary ??
-                                        'No summary has been added for this SRCH content.'}
-                                    </p>
+                                      'No summary has been added for this SRCH content.'}
+                                  </p>
 
-                                    <Button
+                                  <Button
                                     size="sm"
                                     variant="outline-secondary"
                                     href={`/srch/content/${mapping.srchContent.id}`}
                                     className="mb-3"
-                                    >
+                                  >
                                     View Content
-                                    </Button>
+                                  </Button>
 
-                                    <div className="border-top pt-2 mt-2">
-                                    <div className="small text-muted mb-1">Instructor Notes</div>
+                                  <div className="border-top pt-2 mt-2">
+                                    <div className="small text-muted mb-1">
+                                      Instructor Notes
+                                    </div>
 
                                     {mapping.alignmentNote ? (
-                                        <p className="small mb-0" style={{ whiteSpace: 'pre-line' }}>
+                                      <p className="small mb-0" style={{ whiteSpace: 'pre-line' }}>
                                         {mapping.alignmentNote}
-                                        </p>
+                                      </p>
                                     ) : (
-                                        <p className="small text-muted fst-italic mb-0">
+                                      <p className="small text-muted fst-italic mb-0">
                                         No instructor notes added yet.
-                                        </p>
+                                      </p>
                                     )}
-                                    </div>
+                                  </div>
                                 </div>
-                                </details>
+                              </details>
                             ))}
                           </div>
                         ) : (
