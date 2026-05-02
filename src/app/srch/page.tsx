@@ -112,11 +112,20 @@ const SRCHPage = async ({ searchParams }: SRCHPageProps) => {
 
         {courseId && objectiveId && (
           <Card className="shadow-sm mb-4 border-primary">
-            <div className="p-4">
-              <h5 className="mb-2">Mapping Mode</h5>
-              <p className="text-muted mb-0">
-                Search or browse SRCH content to map to your current learning objective.
-              </p>
+            <div className="p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+              <div>
+                <h5 className="mb-2">Mapping Mode</h5>
+                <p className="text-muted mb-0">
+                  Search or browse SRCH content to map to your current learning objective.
+                </p>
+              </div>
+
+              <Button
+                variant="outline-secondary"
+                href={`/courses/${courseId}`}
+              >
+                Done Mapping
+              </Button>
             </div>
           </Card>
         )}
