@@ -5,6 +5,7 @@ import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
+import ReactMarkdown from 'react-markdown';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { deleteCourse, updateMappingNote } from './actions';
@@ -73,10 +74,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
           <Col md={8}>
             <h1 className="fw-bold mb-1">{course.title}</h1>
             <p className="text-muted mb-2">{course.code ?? 'No course code'}</p>
-            <p
-              className="mb-0"
-              style={{ whiteSpace: 'pre-line' }}
-            >
+            <p className="mb-0" style={{ whiteSpace: 'pre-line' }}>
               {course.description ?? 'No course description has been added yet.'}
             </p>
           </Col>
@@ -86,9 +84,11 @@ const CoursePage = async ({ params }: CoursePageProps) => {
               <Button variant="outline-secondary" href="/profile">
                 Back to Profile
               </Button>
+
               <Button variant="primary" href={`/courses/${course.id}/edit`}>
                 Edit Course
               </Button>
+
               <form action={deleteCourse}>
                 <input type="hidden" name="id" value={course.id} />
                 <Button type="submit" variant="outline-danger">
@@ -112,10 +112,12 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                 <p className="mb-2">
                   <strong>Objectives:</strong> {course.objectives.length}
                 </p>
+
                 <p className="mb-2">
                   <strong>Created:</strong>{' '}
                   {new Date(course.createdAt).toLocaleDateString('en-US')}
                 </p>
+
                 <p className="mb-4">
                   <strong>Last Updated:</strong>{' '}
                   {new Date(course.updatedAt).toLocaleDateString('en-US')}
@@ -132,14 +134,15 @@ const CoursePage = async ({ params }: CoursePageProps) => {
           </Col>
         </Row>
 
-        {/* Objectives Header */}
         <Row className="mb-3">
           <Col className="d-flex justify-content-between align-items-center flex-wrap gap-2">
             <h3 className="mb-0">Learning Objectives</h3>
+
             <div className="d-flex gap-2">
               <Button variant="primary" size="sm" href={`/courses/${course.id}/objectives/new`}>
                 + Add Objective
               </Button>
+
               <Button variant="outline-primary" size="sm" href="/srch">
                 Browse SRCH
               </Button>
@@ -147,7 +150,6 @@ const CoursePage = async ({ params }: CoursePageProps) => {
           </Col>
         </Row>
 
-        {/* Objectives List */}
         <Row>
           <Col>
             <Card className="shadow-sm">
@@ -178,6 +180,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                             >
                               Edit
                             </Button>
+
                             <Button
                               size="sm"
                               variant="outline-primary"
@@ -190,41 +193,92 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                           <h6 className="mb-2">Mapped SRCH Content</h6>
 
                           {objective.mappings.length > 0 ? (
-                            <div className="d-flex flex-column gap-2">
+                            <div className="d-flex flex-column gap-3">
                               {objective.mappings.map((mapping) => (
-                                <div key={mapping.id} className="border rounded p-2 bg-light">
-                                  <div className="fw-semibold">{mapping.srchContent.title}</div>
-
-                                  <div className="text-muted small mb-1">
-                                    Topic: {mapping.srchContent.topic ?? 'Uncategorized'}
-                                  </div>
-
-                                  {mapping.srchContent.summary && (
-                                    <div className="small mb-2">{mapping.srchContent.summary}</div>
-                                  )}
-
-                                  <div className="border-top pt-2 mt-2">
-                                    <div className="small text-muted mb-1">Instructor Notes</div>
-
-                                    <form action={updateMappingNote}>
-                                      <input type="hidden" name="mappingId" value={mapping.id} />
-                                      <input type="hidden" name="courseId" value={course.id} />
-
-                                      <textarea
-                                        name="alignmentNote"
-                                        defaultValue={mapping.alignmentNote ?? ''}
-                                        className="form-control form-control-sm mb-2"
-                                        rows={2}
-                                        placeholder="Describe how you are using this SRCH content in your course..."
-                                      />
-
-                                      <div className="d-flex justify-content-end">
-                                        <Button type="submit" size="sm" variant="outline-primary">
-                                          Save Notes
-                                        </Button>
+                                <div key={mapping.id} className="border rounded p-3 bg-light">
+                                  <Row className="g-3">
+                                    <Col lg={7}>
+                                      <div className="fw-semibold">
+                                        {mapping.srchContent.title}
                                       </div>
-                                    </form>
-                                  </div>
+
+                                      <div className="text-muted small mb-2">
+                                        Topic:{' '}
+                                        {mapping.srchContent.topic ?? 'Uncategorized'}
+                                      </div>
+
+                                      <div className="border-top pt-2 mt-2">
+                                        <div className="small text-muted mb-1">
+                                          Instructor Notes
+                                        </div>
+
+                                        <form action={updateMappingNote}>
+                                          <input
+                                            type="hidden"
+                                            name="mappingId"
+                                            value={mapping.id}
+                                          />
+                                          <input
+                                            type="hidden"
+                                            name="courseId"
+                                            value={course.id}
+                                          />
+
+                                          <textarea
+                                            name="alignmentNote"
+                                            defaultValue={mapping.alignmentNote ?? ''}
+                                            className="form-control form-control-sm mb-2"
+                                            rows={6}
+                                            placeholder="Describe how you are using this SRCH content in your course..."
+                                          />
+
+                                          <div className="d-flex justify-content-end">
+                                            <Button
+                                              type="submit"
+                                              size="sm"
+                                              variant="outline-primary"
+                                            >
+                                              Save Notes
+                                            </Button>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </Col>
+
+                                    <Col lg={5}>
+                                      <Card className="h-100 border-secondary">
+                                        <div className="p-3">
+                                          <h6 className="mb-2">SRCH Content Preview</h6>
+
+                                          <p className="small text-muted mb-2">
+                                            {mapping.srchContent.summary ??
+                                              'No summary available.'}
+                                          </p>
+
+                                          <div
+                                            className="small border-top pt-2"
+                                            style={{
+                                              maxHeight: '240px',
+                                              overflowY: 'auto',
+                                            }}
+                                          >
+                                            <ReactMarkdown>
+                                              {mapping.srchContent.body}
+                                            </ReactMarkdown>
+                                          </div>
+
+                                          <Button
+                                            size="sm"
+                                            variant="outline-secondary"
+                                            className="mt-3"
+                                            href={`/srch/content/${mapping.srchContent.id}?courseId=${course.id}&objectiveId=${objective.id}`}
+                                          >
+                                            Open Full Content
+                                          </Button>
+                                        </div>
+                                      </Card>
+                                    </Col>
+                                  </Row>
                                 </div>
                               ))}
                             </div>
@@ -242,6 +296,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                       Start by adding learning objectives for this course. You’ll use them to map
                       SRCH content and build your curriculum path.
                     </p>
+
                     <Button variant="primary" href={`/courses/${course.id}/objectives/new`}>
                       Add Your First Objective
                     </Button>
