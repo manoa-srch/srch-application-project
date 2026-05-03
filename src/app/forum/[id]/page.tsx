@@ -1,13 +1,14 @@
-import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
 import Link from 'next/link';
+import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import { redirect, notFound } from 'next/navigation';
 import { createForumComment, rejectForumPost, toggleForumVote } from '@/actions/forum.action';
 
-const ForumPostPage = async ({ params }: { params: { id: string } }) => {
+const ForumPostPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const session = await auth();
   if (!session?.user?.email) redirect('/auth/signin');
+
   const { id } = await params;
   const postId = Number(id);
   if (isNaN(postId)) notFound();
@@ -33,36 +34,37 @@ const ForumPostPage = async ({ params }: { params: { id: string } }) => {
   if (!post) notFound();
   if (!currentUser) redirect('/auth/signin');
 
-  const hasVoted = post.votes.some((v) => v.authorId === currentUser.id);
+  const hasVoted = post.votes.some((vote) => vote.authorId === currentUser.id);
   const isAdmin = currentUser.role === 'ADMIN';
 
   return (
     <main>
       <Container className="py-5 mt-5 pt-4">
-
-        {/* ── Back link ── */}
         <Row className="mb-3">
           <Col>
-            <a href="/forum" className="btn btn-outline-secondary btn-sm">
-              ← Back to Forum
-            </a>
+            <Link href="/forum" className="btn btn-outline-secondary btn-sm">
+              Back to Forum
+            </Link>
           </Col>
         </Row>
 
-        {/* ── Post Header ── */}
         <Row className="mb-4">
           <Col>
             <div className="d-flex align-items-center gap-2 mb-1">
               <h1 className="mb-0">{post.title}</h1>
-              <Badge bg={
-                post.status === 'PENDING' ? 'warning' :
-                post.status === 'MAPPED' ? 'success' : 'danger'
-              } text={post.status === 'PENDING' ? 'dark' : undefined}>
+              <Badge
+                bg={
+                  post.status === 'PENDING'
+                    ? 'warning'
+                    : post.status === 'MAPPED'
+                      ? 'success'
+                      : 'danger'
+                }
+                text={post.status === 'PENDING' ? 'dark' : undefined}
+              >
                 {post.status}
               </Badge>
-              {post.bloomLevel && (
-                <Badge bg="secondary">{post.bloomLevel}</Badge>
-              )}
+              {post.bloomLevel && <Badge bg="secondary">{post.bloomLevel}</Badge>}
             </div>
             <p className="text-muted small">
               Submitted by {post.author.name ?? `${post.author.firstName} ${post.author.lastName}`}
@@ -70,7 +72,6 @@ const ForumPostPage = async ({ params }: { params: { id: string } }) => {
             </p>
             <p>{post.description}</p>
 
-            {/* Mapped objective info */}
             {post.status === 'MAPPED' && post.mappedObjective && (
               <div className="alert alert-success">
                 <strong>Mapped to:</strong> {post.mappedObjective.description}
@@ -79,7 +80,6 @@ const ForumPostPage = async ({ params }: { params: { id: string } }) => {
           </Col>
         </Row>
 
-        {/* ── Vote ── */}
         <Row className="mb-4">
           <Col>
             <form action={toggleForumVote}>
@@ -88,18 +88,14 @@ const ForumPostPage = async ({ params }: { params: { id: string } }) => {
                 type="submit"
                 className={`btn ${hasVoted ? 'btn-primary' : 'btn-outline-primary'}`}
               >
-                ▲ {hasVoted ? 'Voted' : 'Upvote'} ({post.votes.length})
+                {hasVoted ? 'Voted' : 'Upvote'} ({post.votes.length})
               </button>
             </form>
           </Col>
 
-          {/* Admin actions */}
           {isAdmin && post.status === 'PENDING' && (
             <Col xs="auto" className="d-flex gap-2 align-items-center">
-              <Link
-                href={`/forum/${post.id}/map`}
-                className="btn btn-outline-success btn-sm"
-              >
+              <Link href={`/forum/${post.id}/map`} className="btn btn-outline-success btn-sm">
                 Map to Objective
               </Link>
               <form action={rejectForumPost}>
@@ -112,7 +108,6 @@ const ForumPostPage = async ({ params }: { params: { id: string } }) => {
           )}
         </Row>
 
-        {/* ── Comments ── */}
         <Row className="mb-4">
           <Col>
             <h4>Comments ({post.comments.length})</h4>
@@ -132,7 +127,6 @@ const ForumPostPage = async ({ params }: { params: { id: string } }) => {
           </Col>
         </Row>
 
-        {/* ── Add Comment ── */}
         <Row>
           <Col md={8}>
             <h5>Leave a Comment</h5>
@@ -153,7 +147,6 @@ const ForumPostPage = async ({ params }: { params: { id: string } }) => {
             </form>
           </Col>
         </Row>
-
       </Container>
     </main>
   );

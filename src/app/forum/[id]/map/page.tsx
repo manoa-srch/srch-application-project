@@ -1,9 +1,9 @@
+import Link from 'next/link';
 import { Container, Row, Col } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import { redirect, notFound } from 'next/navigation';
 import { mapForumPost } from '@/actions/forum.action';
-import Link from 'next/link';
 
 const MapForumPostPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const session = await auth();
@@ -13,7 +13,6 @@ const MapForumPostPage = async ({ params }: { params: Promise<{ id: string }> })
   const postId = Number(id);
   if (isNaN(postId)) notFound();
 
-  // Verify user is admin
   const currentUser = await prisma.user.findUnique({
     where: { email: session.user.email },
   });
@@ -35,20 +34,17 @@ const MapForumPostPage = async ({ params }: { params: Promise<{ id: string }> })
   return (
     <main>
       <Container className="py-3">
-
-        {/* ── Back link ── */}
         <Row className="mb-3">
           <Col>
             <Link href={`/forum/${post.id}`} className="btn btn-outline-secondary btn-sm">
-              ← Back to Post
+              Back to Post
             </Link>
           </Col>
         </Row>
 
-        {/* ── Post Summary ── */}
         <Row className="mb-4">
           <Col>
-            <h1>Create & Map New Objective</h1>
+            <h1>Create &amp; Map New Objective</h1>
             <div className="border rounded p-3 bg-light">
               <h5>{post.title}</h5>
               <p className="mb-1">{post.description}</p>
@@ -60,20 +56,18 @@ const MapForumPostPage = async ({ params }: { params: Promise<{ id: string }> })
           </Col>
         </Row>
 
-        {/* ── Map Form ── */}
         <Row>
           <Col md={8}>
             <h5>Create a new Learning Objective from this post:</h5>
             <form action={mapForumPost}>
               <input type="hidden" name="postId" value={post.id} />
 
-              {/* Course selector */}
               <div className="mb-3">
                 <label htmlFor="courseId" className="form-label fw-bold">
                   Course
                 </label>
                 <select name="courseId" id="courseId" required className="form-select">
-                  <option value="">— Select a course —</option>
+                  <option value="">Select a course</option>
                   {courses.map((course) => (
                     <option key={course.id} value={course.id}>
                       {course.code ? `[${course.code}] ` : ''}{course.title}
@@ -82,7 +76,6 @@ const MapForumPostPage = async ({ params }: { params: Promise<{ id: string }> })
                 </select>
               </div>
 
-              {/* Description - pre-filled from post */}
               <div className="mb-3">
                 <label htmlFor="description" className="form-label fw-bold">
                   Objective Description
@@ -97,7 +90,6 @@ const MapForumPostPage = async ({ params }: { params: Promise<{ id: string }> })
                 />
               </div>
 
-              {/* Bloom's level - pre-filled if set */}
               <div className="mb-4">
                 <label htmlFor="bloomLevel" className="form-label fw-bold">
                   Bloom&apos;s Taxonomy Level
@@ -109,7 +101,7 @@ const MapForumPostPage = async ({ params }: { params: Promise<{ id: string }> })
                   className="form-select"
                   defaultValue={post.bloomLevel ?? ''}
                 >
-                  <option value="">— Select a level —</option>
+                  <option value="">Select a level</option>
                   <option value="REMEMBER">Remember</option>
                   <option value="UNDERSTAND">Understand</option>
                   <option value="APPLY">Apply</option>
@@ -130,7 +122,6 @@ const MapForumPostPage = async ({ params }: { params: Promise<{ id: string }> })
             </form>
           </Col>
         </Row>
-
       </Container>
     </main>
   );

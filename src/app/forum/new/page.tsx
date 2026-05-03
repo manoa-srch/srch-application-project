@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Container, Row, Col } from 'react-bootstrap';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
@@ -50,7 +51,7 @@ const NewForumPostPage = async () => {
                   <span className="text-muted fw-normal">(optional)</span>
                 </label>
                 <select id="bloomLevel" name="bloomLevel" className="form-select">
-                  <option value="">— Select a level —</option>
+                  <option value="">Select a level</option>
                   <option value="REMEMBER">Remember</option>
                   <option value="UNDERSTAND">Understand</option>
                   <option value="APPLY">Apply</option>
@@ -63,9 +64,9 @@ const NewForumPostPage = async () => {
                 <button type="submit" className="btn btn-success">
                   Submit Objective
                 </button>
-                <a href="/forum" className="btn btn-outline-secondary">
+                <Link href="/forum" className="btn btn-outline-secondary">
                   Cancel
-                </a>
+                </Link>
               </div>
             </form>
           </Col>

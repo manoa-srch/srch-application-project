@@ -1,8 +1,8 @@
-import { Col, Container, Row, Table, Badge } from 'react-bootstrap';
+import Link from 'next/link';
+import { Badge, Col, Container, Row, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
-import Link from 'next/link';
 
 const ForumPage = async () => {
   const session = await auth();
@@ -35,10 +35,7 @@ const ForumPage = async () => {
 
   return (
     <main>
-      
-      <Container id="forum" fluid className="py-3 mt-5 pt-4">
-
-        {/* ── Header ── */}
+      <Container id="forum" className="py-3 mt-5 pt-4">
         <Row className="mb-3">
           <Col>
             <h1>Objectives Forum</h1>
@@ -54,7 +51,6 @@ const ForumPage = async () => {
           </Col>
         </Row>
 
-        {/* ── Pending Posts ── */}
         <Row className="mb-5">
           <Col>
             <h2>
@@ -84,7 +80,7 @@ const ForumPage = async () => {
                         {post.bloomLevel ? (
                           <Badge bg="secondary">{post.bloomLevel}</Badge>
                         ) : (
-                          <span className="text-muted">—</span>
+                          <span className="text-muted">-</span>
                         )}
                       </td>
                       <td>{post.author.name ?? `${post.author.firstName} ${post.author.lastName}`}</td>
@@ -92,15 +88,15 @@ const ForumPage = async () => {
                       <td>{post.votes.length}</td>
                       <td>{post.comments.length}</td>
                       <td>
-                        <a href={`/forum/${post.id}`} className="btn btn-sm btn-outline-primary">
+                        <Link href={`/forum/${post.id}`} className="btn btn-sm btn-outline-primary">
                           View
-                        </a>
+                        </Link>
                       </td>
                       {isAdmin && (
                         <td>
-                          <a href={`/forum/${post.id}/map`} className="btn btn-sm btn-outline-success">
+                          <Link href={`/forum/${post.id}/map`} className="btn btn-sm btn-outline-success">
                             Map
-                          </a>
+                          </Link>
                         </td>
                       )}
                     </tr>
@@ -111,7 +107,6 @@ const ForumPage = async () => {
           </Col>
         </Row>
 
-        {/* ── Mapped Posts ── */}
         <Row>
           <Col>
             <h2>
@@ -141,7 +136,7 @@ const ForumPage = async () => {
                         {post.bloomLevel ? (
                           <Badge bg="secondary">{post.bloomLevel}</Badge>
                         ) : (
-                          <span className="text-muted">—</span>
+                          <span className="text-muted">-</span>
                         )}
                       </td>
                       <td>{post.author.name ?? `${post.author.firstName} ${post.author.lastName}`}</td>
@@ -149,16 +144,16 @@ const ForumPage = async () => {
                         {post.mappedObjective ? (
                           <span>{post.mappedObjective.description}</span>
                         ) : (
-                          <span className="text-muted">—</span>
+                          <span className="text-muted">-</span>
                         )}
                       </td>
                       <td>{post.createdAt.toLocaleDateString()}</td>
                       <td>{post.votes.length}</td>
                       <td>{post.comments.length}</td>
                       <td>
-                        <a href={`/forum/${post.id}`} className="btn btn-sm btn-outline-primary">
+                        <Link href={`/forum/${post.id}`} className="btn btn-sm btn-outline-primary">
                           View
-                        </a>
+                        </Link>
                       </td>
                     </tr>
                   ))}
@@ -167,7 +162,6 @@ const ForumPage = async () => {
             )}
           </Col>
         </Row>
-
       </Container>
     </main>
   );

@@ -1,0 +1,12 @@
+<svg width="960" height="720" viewBox="0 0 960 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="720" rx="36" fill="#F4E8CF"/>
+  <rect x="72" y="74" width="816" height="572" rx="28" fill="#FFF9EE"/>
+  <rect x="130" y="132" width="290" height="398" rx="22" fill="#E9D7AF"/>
+  <rect x="454" y="132" width="374" height="72" rx="18" fill="#F1E5C9"/>
+  <rect x="454" y="230" width="374" height="72" rx="18" fill="#E9D7AF"/>
+  <rect x="454" y="328" width="374" height="72" rx="18" fill="#F1E5C9"/>
+  <rect x="454" y="426" width="374" height="104" rx="22" fill="#D8C29A"/>
+  <text x="480" y="618" text-anchor="middle" fill="#7A6242" font-family="Arial, sans-serif" font-size="34" font-weight="700">
+    Learning objectives workshop placeholder
+  </text>
+</svg>
