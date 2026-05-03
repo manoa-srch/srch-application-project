@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+
 export const dynamic = 'force-dynamic';
 
 const ProfilePage = async () => {
@@ -29,106 +30,137 @@ const ProfilePage = async () => {
   }
 
   return (
-    <main>
-      <Container className="py-4">
-        <Row className="mb-4">
-          <Col md={8}>
-            <h1 className="fw-bold">Profile</h1>
-            <p className="text-muted mb-0">
-              Manage your courses and contributions to the SRCH platform.
-            </p>
-          </Col>
-        </Row>
+    <main className="section-shell">
+      <Container className="py-4 py-lg-5">
+        <section className="hero-panel mb-4">
+          <Row className="align-items-center g-4">
+            <Col lg={8} className="hero-copy">
+              <span className="eyebrow mb-3">Profile</span>
+              <h1 className="mb-3">{user.name ?? `${user.firstName} ${user.lastName}`}</h1>
+              <p className="mb-3">
+                Manage your account, review your courses, and keep track of the SRCH content you
+                have contributed to the platform.
+              </p>
+              <div className="metric-strip">
+                <span className="metric-chip">{user.email}</span>
+                <span className="metric-chip">Role: {user.role}</span>
+              </div>
+            </Col>
+            <Col lg={4}>
+              <div className="dashboard-grid">
+                <div className="dashboard-stat">
+                  <strong>{user.courses.length}</strong>
+                  <span>Courses</span>
+                </div>
+                <div className="dashboard-stat">
+                  <strong>{user.contents.length}</strong>
+                  <span>Contributions</span>
+                </div>
+                <div className="dashboard-stat">
+                  <strong>{user.role}</strong>
+                  <span>Account role</span>
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </section>
 
-        <Card className="shadow-sm mb-4">
-          <div className="p-3">
-            <Row className="align-items-center">
-              <Col md={8}>
-                <h4 className="mb-1">{user.name ?? `${user.firstName} ${user.lastName}`}</h4>
-                <p className="text-muted mb-1">{user.email}</p>
-                <Badge bg="secondary">{user.role}</Badge>
-              </Col>
-              <Col md={4} className="text-md-end mt-3 mt-md-0">
-                <Button variant="outline-primary" size="sm" href="/profile/edit">
-                  Edit Profile
-                </Button>
-              </Col>
-            </Row>
-          </div>
-        </Card>
+        <section className="section-card p-4 mb-4">
+          <Row className="align-items-center g-3">
+            <Col md={8}>
+              <h3 className="mb-1">Account details</h3>
+              <p className="text-muted mb-0">
+                Keep your profile up to date while continuing to use the same course and SRCH tools.
+              </p>
+            </Col>
+            <Col md={4} className="text-md-end">
+              <Button variant="outline-primary" href="/profile/edit">Edit Profile</Button>
+            </Col>
+          </Row>
+        </section>
 
-        <Row className="mb-4">
-          <Col>
-            <h3>Your Courses</h3>
-            <Button href="/courses/new">+ New Course</Button>
-          </Col>
-        </Row>
+        <section className="mb-5">
+          <Row className="align-items-center mb-3 g-3">
+            <Col>
+              <h2 className="mb-1">Your Courses</h2>
+              <p className="text-muted mb-0">Open a course to continue mapping and curriculum planning.</p>
+            </Col>
+            <Col xs="auto">
+              <Button href="/courses/new">+ New Course</Button>
+            </Col>
+          </Row>
 
-        <Row className="g-4 mb-5">
-          {user.courses.length > 0 ? (
-            user.courses.map((course) => (
-              <Col key={course.id} md={6} lg={4}>
-                <Card className="h-100 shadow-sm">
-                  <div className="p-3">
-                    <h5>{course.title}</h5>
-                    <p className="text-muted mb-2">{course.code ?? 'No course code'}</p>
-                    <p>{course.description ?? 'No description available.'}</p>
-                    <div className="d-flex gap-2">
-                      <Button size="sm" variant="primary" href={`/courses/${course.id}`}>
-                        Open
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline-secondary"
-                        href={`/courses/${course.id}/edit`}
-                      >
-                        Edit
-                      </Button>
+          <Row className="g-4">
+            {user.courses.length > 0 ? (
+              user.courses.map((course) => (
+                <Col key={course.id} md={6} xl={4}>
+                  <Card className="surface-card border-0">
+                    <div className="surface-body d-flex flex-column h-100">
+                      <div className="d-flex justify-content-between align-items-start gap-3 mb-2">
+                        <h4 className="mb-0">{course.title}</h4>
+                        <Badge bg="secondary">{course.code ?? 'Course'}</Badge>
+                      </div>
+                      <p className="text-muted mb-4">{course.description ?? 'No description available.'}</p>
+                      <div className="d-flex gap-2 flex-wrap mt-auto">
+                        <Button size="sm" href={`/courses/${course.id}`}>Open</Button>
+                        <Button size="sm" variant="outline-secondary" href={`/courses/${course.id}/edit`}>
+                          Edit
+                        </Button>
+                      </div>
                     </div>
+                  </Card>
+                </Col>
+              ))
+            ) : (
+              <Col>
+                <Card className="surface-card border-0">
+                  <div className="empty-state">
+                    <h4 className="mb-2">You have not created any courses yet.</h4>
+                    <p className="text-muted mb-0">Create one to start mapping SRCH content.</p>
                   </div>
                 </Card>
               </Col>
-            ))
-          ) : (
+            )}
+          </Row>
+        </section>
+
+        <section>
+          <Row className="align-items-center mb-3">
             <Col>
-              <p className="text-muted">You have not created any courses yet.</p>
+              <h2 className="mb-1">Your Contributions</h2>
+              <p className="text-muted mb-0">Resources you have added to the SRCH platform.</p>
             </Col>
-          )}
-        </Row>
+          </Row>
 
-        <Row className="mb-3">
-          <Col>
-            <h3>Your Contributions</h3>
-          </Col>
-        </Row>
-
-        <Row className="g-4">
-          {user.contents.length > 0 ? (
-            user.contents.map((content) => (
-              <Col key={content.id} md={6}>
-                <Card className="shadow-sm">
-                  <div className="p-3">
-                    <h5>{content.title}</h5>
-                    <p className="text-muted mb-2">Topic: {content.topic ?? 'Uncategorized'}</p>
-                    <p>{content.summary ?? 'No summary available.'}</p>
-                    <div className="d-flex gap-2">
-                      <Button size="sm" variant="outline-primary">
-                        View
-                      </Button>
-                      <Button size="sm" variant="outline-secondary">
-                        Edit
-                      </Button>
+          <Row className="g-4">
+            {user.contents.length > 0 ? (
+              user.contents.map((content) => (
+                <Col key={content.id} md={6}>
+                  <Card className="surface-card border-0">
+                    <div className="surface-body">
+                      <span className="eyebrow mb-3">{content.topic ?? 'Uncategorized'}</span>
+                      <h4 className="mb-2">{content.title}</h4>
+                      <p className="text-muted mb-4">{content.summary ?? 'No summary available.'}</p>
+                      <div className="d-flex gap-2">
+                        <Button size="sm" variant="outline-primary">View</Button>
+                        <Button size="sm" variant="outline-secondary">Edit</Button>
+                      </div>
                     </div>
+                  </Card>
+                </Col>
+              ))
+            ) : (
+              <Col>
+                <Card className="surface-card border-0">
+                  <div className="empty-state">
+                    <h4 className="mb-2">You have not contributed any SRCH content yet.</h4>
+                    <p className="text-muted mb-0">Your future contributions will appear here.</p>
                   </div>
                 </Card>
               </Col>
-            ))
-          ) : (
-            <Col>
-              <p className="text-muted">You have not contributed any SRCH content yet.</p>
-            </Col>
-          )}
-        </Row>
+            )}
+          </Row>
+        </section>
       </Container>
     </main>
   );

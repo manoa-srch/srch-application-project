@@ -1,0 +1,14 @@
+<svg width="960" height="720" viewBox="0 0 960 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="720" rx="36" fill="#DCEADB"/>
+  <rect x="70" y="70" width="820" height="580" rx="28" fill="#F7FBF6"/>
+  <rect x="128" y="140" width="164" height="376" rx="18" fill="#ABC4A8"/>
+  <rect x="312" y="140" width="164" height="376" rx="18" fill="#C7DDBF"/>
+  <rect x="496" y="140" width="164" height="376" rx="18" fill="#96B894"/>
+  <rect x="680" y="140" width="82" height="376" rx="18" fill="#D3E4C8"/>
+  <circle cx="785" cy="281" r="70" fill="#7FA27B"/>
+  <path d="M826 321L867 362" stroke="#F7FBF6" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="785" cy="281" r="34" stroke="#F7FBF6" stroke-width="18"/>
+  <text x="480" y="608" text-anchor="middle" fill="#4A6B47" font-family="Arial, sans-serif" font-size="34" font-weight="700">
+    Research library placeholder
+  </text>
+</svg>

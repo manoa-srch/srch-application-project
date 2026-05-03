@@ -1,0 +1,18 @@
+<svg width="960" height="720" viewBox="0 0 960 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="960" height="720" rx="36" fill="#E5DFF1"/>
+  <rect x="72" y="72" width="816" height="576" rx="28" fill="#FBF9FF"/>
+  <rect x="122" y="158" width="200" height="112" rx="24" fill="#C5B7E2"/>
+  <rect x="380" y="158" width="200" height="112" rx="24" fill="#B3D3C7"/>
+  <rect x="638" y="158" width="200" height="112" rx="24" fill="#F0CEB0"/>
+  <rect x="122" y="410" width="200" height="112" rx="24" fill="#B3D3C7"/>
+  <rect x="380" y="410" width="200" height="112" rx="24" fill="#F0CEB0"/>
+  <rect x="638" y="410" width="200" height="112" rx="24" fill="#C5B7E2"/>
+  <path d="M322 214H380" stroke="#8F80B1" stroke-width="18" stroke-linecap="round"/>
+  <path d="M580 214H638" stroke="#8F80B1" stroke-width="18" stroke-linecap="round"/>
+  <path d="M222 270V410" stroke="#8F80B1" stroke-width="18" stroke-linecap="round"/>
+  <path d="M480 270V410" stroke="#8F80B1" stroke-width="18" stroke-linecap="round"/>
+  <path d="M738 270V410" stroke="#8F80B1" stroke-width="18" stroke-linecap="round"/>
+  <text x="480" y="606" text-anchor="middle" fill="#665688" font-family="Arial, sans-serif" font-size="34" font-weight="700">
+    Curriculum mapping placeholder
+  </text>
+</svg>

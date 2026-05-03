@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import PhotoPlaceholder from '@/components/PhotoPlaceholder';
 
 type SRCHPageProps = {
   searchParams?: Promise<{
@@ -98,95 +99,89 @@ const SRCHPage = async ({ searchParams }: SRCHPageProps) => {
   );
 
   return (
-    <main>
-      <Container className="py-4">
-        <Row className="align-items-center mb-4">
-          <Col lg={8}>
-            <h1 className="fw-bold">SRCH Library</h1>
-            <p className="text-muted mb-0">
-              Browse SRCH topics as a library of teaching resources. Select a topic to view
-              content that can be mapped to your course objectives.
-            </p>
-          </Col>
-        </Row>
+    <main className="section-shell">
+      <Container className="py-4 py-lg-5">
+        <section className="hero-panel mb-4">
+          <Row className="align-items-center g-4">
+            <Col lg={7} className="hero-copy">
+              <span className="eyebrow mb-3">SRCH resource library</span>
+              <h1 className="mb-3">Browse teaching resources by topic, summary, and fit.</h1>
+              <p className="mb-0">
+                Search for SRCH content directly or move through topic collections when you are
+                looking for materials to align with a specific learning objective.
+              </p>
+            </Col>
+            <Col lg={5}>
+              <PhotoPlaceholder
+                src="/images/search%20the%20library.png"
+                alt="Academic research materials and digital library browsing."
+              />
+            </Col>
+          </Row>
+        </section>
 
         {courseId && objectiveId && (
-          <Card className="shadow-sm mb-4 border-primary">
-            <div className="p-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+          <section className="section-card p-4 mb-4">
+            <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
               <div>
-                <h5 className="mb-2">Mapping Mode</h5>
+                <span className="eyebrow mb-3">Mapping mode</span>
+                <h3 className="mb-2">Select SRCH content for your current objective</h3>
                 <p className="text-muted mb-0">
-                  Search or browse SRCH content to map to your current learning objective.
+                  Search or browse resources, then open one to map it back to the course.
                 </p>
               </div>
-
-              <Button
-                variant="outline-secondary"
-                href={`/courses/${courseId}`}
-              >
-                Done Mapping
-              </Button>
+              <Button variant="outline-secondary" href={`/courses/${courseId}`}>Done Mapping</Button>
             </div>
-          </Card>
+          </section>
         )}
 
-        <form method="GET" action="/srch" className="mb-4">
+        <form method="GET" action="/srch" className="search-panel mb-4">
           {courseId && <input type="hidden" name="courseId" value={courseId} />}
           {objectiveId && <input type="hidden" name="objectiveId" value={objectiveId} />}
-
-          <div className="d-flex gap-2">
-            <input
-              type="text"
-              name="q"
-              className="form-control"
-              placeholder="Search SRCH content by title, topic, or keyword..."
-              defaultValue={q}
-            />
-            <Button type="submit" variant="primary">
-              Search
-            </Button>
+          <Row className="g-3 align-items-center">
+            <Col lg={8}>
+              <input
+                type="text"
+                name="q"
+                className="form-control"
+                placeholder="Search SRCH content by title, topic, or keyword..."
+                defaultValue={q}
+              />
+            </Col>
+            <Col lg="auto">
+              <Button type="submit">Search</Button>
+            </Col>
             {q && (
-              <Button
-                variant="outline-secondary"
-                href={mappingQuery ? `/srch?${mappingQuery}` : '/srch'}
-              >
-                Clear
-              </Button>
+              <Col lg="auto">
+                <Button variant="outline-secondary" href={mappingQuery ? `/srch?${mappingQuery}` : '/srch'}>
+                  Clear
+                </Button>
+              </Col>
             )}
-          </div>
+          </Row>
         </form>
 
         {q ? (
           <>
-            <h4 className="mb-3">Search Results for “{q}”</h4>
+            <div className="mb-3">
+              <h2 className="mb-1">Search results for &quot;{q}&quot;</h2>
+              <div className="results-count">{searchResults.length} matches found</div>
+            </div>
 
             <Row className="g-4">
               {searchResults.length > 0 ? (
                 searchResults.map((content) => (
-                  <Col key={content.id} md={6} lg={4}>
-                    <Card className="h-100 shadow-sm">
-                      <div className="p-4 d-flex flex-column h-100">
-                        <p className="text-muted small mb-2">
-                          {content.topic ?? 'Uncategorized'}
-                        </p>
-
-                        <h5 className="fw-bold">{content.title}</h5>
-
-                        <p>
+                  <Col key={content.id} md={6} xl={4}>
+                    <Card className="surface-card border-0">
+                      <div className="surface-body d-flex flex-column h-100">
+                        <span className="eyebrow mb-3">{content.topic ?? 'Uncategorized'}</span>
+                        <h4 className="mb-2">{content.title}</h4>
+                        <p className="text-muted mb-4">
                           {content.summary ??
-                            `${content.body.slice(0, 140)}${
-                              content.body.length > 140 ? '...' : ''
-                            }`}
+                            `${content.body.slice(0, 160)}${content.body.length > 160 ? '...' : ''}`}
                         </p>
-
                         <div className="mt-auto">
-                          <Button
-                            size="sm"
-                            variant="primary"
-                            href={contentHref(content.id)}
-                          >
-                            View Content
-                          </Button>
+                          <Button size="sm" href={contentHref(content.id)}>View Content</Button>
                         </div>
                       </div>
                     </Card>
@@ -194,12 +189,10 @@ const SRCHPage = async ({ searchParams }: SRCHPageProps) => {
                 ))
               ) : (
                 <Col>
-                  <Card className="shadow-sm">
-                    <div className="p-4 text-center">
-                      <h5 className="mb-2">No results found</h5>
-                      <p className="text-muted mb-0">
-                        Try a different search term or browse by topic.
-                      </p>
+                  <Card className="surface-card border-0">
+                    <div className="empty-state">
+                      <h4 className="mb-2">No results found</h4>
+                      <p className="text-muted mb-0">Try a different search term or browse by topic below.</p>
                     </div>
                   </Card>
                 </Col>
@@ -207,45 +200,46 @@ const SRCHPage = async ({ searchParams }: SRCHPageProps) => {
             </Row>
           </>
         ) : (
-          <Row className="g-4">
-            {topicCards.length > 0 ? (
-              topicCards.map((topicCard) => (
-                <Col key={topicCard.topic} md={6} lg={4}>
-                  <Card className="h-100 shadow-sm">
-                    <div className="p-4 d-flex flex-column h-100">
-                      <h4 className="fw-bold mb-2">{topicCard.topic}</h4>
+          <>
+            <div className="mb-3">
+              <h2 className="mb-1">Browse by topic</h2>
+              <div className="results-count">{topicCards.length} topic collections available</div>
+            </div>
 
-                      <p className="text-muted mb-3">
-                        {topicCard.count} {topicCard.count === 1 ? 'resource' : 'resources'}
-                      </p>
-
-                      <p>
-                        {topicCard.sampleSummary ??
-                          'Explore SRCH resources connected to this topic.'}
-                      </p>
-
-                      <div className="mt-auto">
-                        <Button variant="primary" href={topicHref(topicCard.topic)}>
-                          Open Topic
-                        </Button>
+            <Row className="g-4">
+              {topicCards.length > 0 ? (
+                topicCards.map((topicCard) => (
+                  <Col key={topicCard.topic} md={6} xl={4}>
+                    <Card className="surface-card border-0">
+                      <div className="surface-body d-flex flex-column h-100">
+                        <h4 className="mb-2">{topicCard.topic}</h4>
+                        <p className="text-muted mb-3">
+                          {topicCard.count} {topicCard.count === 1 ? 'resource' : 'resources'}
+                        </p>
+                        <p className="text-muted mb-4">
+                          {topicCard.sampleSummary ?? 'Explore SRCH resources connected to this topic.'}
+                        </p>
+                        <div className="mt-auto">
+                          <Button href={topicHref(topicCard.topic)}>Open Topic</Button>
+                        </div>
                       </div>
+                    </Card>
+                  </Col>
+                ))
+              ) : (
+                <Col>
+                  <Card className="surface-card border-0">
+                    <div className="empty-state">
+                      <h4 className="mb-3">No SRCH topics available yet</h4>
+                      <p className="text-muted mb-0">
+                        Add SRCH content to the database to start building the library.
+                      </p>
                     </div>
                   </Card>
                 </Col>
-              ))
-            ) : (
-              <Col>
-                <Card className="shadow-sm">
-                  <div className="p-4 text-center">
-                    <h4 className="mb-3">No SRCH topics available yet</h4>
-                    <p className="text-muted mb-0">
-                      Add SRCH content to the database to start building the library.
-                    </p>
-                  </div>
-                </Card>
-              </Col>
-            )}
-          </Row>
+              )}
+            </Row>
+          </>
         )}
       </Container>
     </main>

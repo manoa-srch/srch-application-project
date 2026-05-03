@@ -10,7 +10,6 @@ import Row from 'react-bootstrap/Row';
 
 const SignUpPage = () => {
   const router = useRouter();
-
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -51,121 +50,123 @@ const SignUpPage = () => {
   };
 
   return (
-    <main style={{ paddingTop: '90px' }}>
-      <Container className="py-5">
-        <Row className="justify-content-center">
-          <Col md={8} lg={5}>
-            <Card className="shadow-sm">
-              <div className="p-4">
-                <div className="text-center mb-4">
-                  <h1 className="h3 fw-bold text-dark">Create an Account</h1>
+    <main className="section-shell">
+      <Container className="auth-shell py-4 py-lg-5">
+        <Card className="auth-card border-0 w-100">
+          <Row className="g-0">
+            <Col lg={5}>
+              <div className="auth-aside d-flex flex-column justify-content-between">
+                <div>
+                  <span className="eyebrow mb-3">New account</span>
+                  <h1 className="text-white mb-3">Start a cleaner course design workflow.</h1>
+                  <p className="mb-0">
+                    Register to create courses, define learning objectives, browse SRCH topics,
+                    and organize teaching materials into a usable sequence.
+                  </p>
+                </div>
+                <div className="auth-bullets">
+                  <div className="auth-bullet">Create your course library and planning notes</div>
+                  <div className="auth-bullet">Track objective-to-resource alignment</div>
+                  <div className="auth-bullet">Build a more intentional curriculum path</div>
+                </div>
+              </div>
+            </Col>
+            <Col lg={7}>
+              <div className="auth-main">
+                <div className="mb-4">
+                  <h2 className="mb-2">Create an Account</h2>
                   <p className="text-muted mb-0">
                     Register to access your courses and SRCH curriculum tools.
                   </p>
                 </div>
 
                 <form onSubmit={handleSubmit}>
-                  <div className="mb-3">
-                    <label htmlFor="signupName" className="form-label">
-                      First Name
-                    </label>
-                    <input
-                      id="signupName"
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter your first name"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="signupLastName" className="form-label">
-                      Last Name
-                    </label>
-                    <input
-                      id="signupLastName"
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter your last name"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="signupEmail" className="form-label">
-                      Email Address
-                    </label>
-                    <input
-                      id="signupEmail"
-                      type="email"
-                      className="form-control"
-                      placeholder="Enter your email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label htmlFor="signupPassword" className="form-label">
-                      Password
-                    </label>
-                    <input
-                      id="signupPassword"
-                      type="password"
-                      className="form-control"
-                      placeholder="Create a password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </div>
-
-                  <div className="mb-3">
-                    <label htmlFor="signupConfirm" className="form-label">
-                      Confirm Password
-                    </label>
-                    <input
-                      id="signupConfirm"
-                      type="password"
-                      className="form-control"
-                      placeholder="Re-enter your password"
-                      value={confirm}
-                      onChange={(e) => setConfirm(e.target.value)}
-                      required
-                    />
-                  </div>
+                  <Row className="g-3">
+                    <Col md={6}>
+                      <label htmlFor="signupName" className="form-label">First Name</label>
+                      <input
+                        id="signupName"
+                        type="text"
+                        className="form-control"
+                        placeholder="First name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="signupLastName" className="form-label">Last Name</label>
+                      <input
+                        id="signupLastName"
+                        type="text"
+                        className="form-control"
+                        placeholder="Last name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                      />
+                    </Col>
+                    <Col xs={12}>
+                      <label htmlFor="signupEmail" className="form-label">Email Address</label>
+                      <input
+                        id="signupEmail"
+                        type="email"
+                        className="form-control"
+                        placeholder="name@university.edu"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="signupPassword" className="form-label">Password</label>
+                      <input
+                        id="signupPassword"
+                        type="password"
+                        className="form-control"
+                        placeholder="Create a password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                      />
+                    </Col>
+                    <Col md={6}>
+                      <label htmlFor="signupConfirm" className="form-label">Confirm Password</label>
+                      <input
+                        id="signupConfirm"
+                        type="password"
+                        className="form-control"
+                        placeholder="Re-enter password"
+                        value={confirm}
+                        onChange={(e) => setConfirm(e.target.value)}
+                        required
+                      />
+                    </Col>
+                  </Row>
 
                   {error && (
-                    <div className="alert alert-danger py-2" role="alert">
+                    <div className="alert alert-danger py-2 mt-3" role="alert">
                       {error}
                     </div>
                   )}
 
                   {success && (
-                    <div className="alert alert-success py-2" role="alert">
+                    <div className="alert alert-success py-2 mt-3" role="alert">
                       {success}
                     </div>
                   )}
 
-                  <div className="d-grid mb-3">
-                    <Button variant="primary" size="lg" type="submit">
-                      Sign Up
-                    </Button>
-                  </div>
-
-                  <div className="text-center">
-                    <p className="mb-1">
-                      Already have an account? <a href="/auth/signin">Sign in here</a>
-                    </p>
+                  <div className="d-flex flex-wrap gap-3 align-items-center mt-4">
+                    <Button size="lg" type="submit">Create Account</Button>
+                    <span className="text-muted">
+                      Already registered? <a href="/auth/signin">Sign in here</a>.
+                    </span>
                   </div>
                 </form>
               </div>
-            </Card>
-          </Col>
-        </Row>
+            </Col>
+          </Row>
+        </Card>
       </Container>
     </main>
   );
