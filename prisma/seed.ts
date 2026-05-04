@@ -1,4 +1,4 @@
-import { Prisma, Role } from '@prisma/client';
+import { Prisma, Role, BloomLevel } from '@prisma/client';
 import * as config from '../config/settings.development.json';
 import { prisma } from '../src/lib/prisma';
 
@@ -3279,6 +3279,106 @@ async function main() {
       console.log(`  Skipping existing SRCH content: ${content.title}`);
     }
   }
+
+  if ('defaultCourses' in config) {
+  for (const courseData of config.defaultCourses) {
+    const owner = await prisma.user.findUnique({
+      where: { email: courseData.owner },
+    });
+
+    if (!owner) {
+      console.log(`  Skipping course "${courseData.title}" because owner not found.`);
+      continue;
+    }
+
+    const existingCourse = await prisma.course.findFirst({
+      where: {
+        title: courseData.title,
+        ownerId: owner.id,
+      },
+    });
+
+    if (existingCourse) {
+      console.log(`  Skipping existing course: ${courseData.title}`);
+      continue;
+    }
+
+    console.log(`  Creating course: ${courseData.title}`);
+
+    const course = await prisma.course.create({
+      data: {
+        title: courseData.title,
+        code: courseData.code,
+        description: courseData.description,
+        ownerId: owner.id,
+      },
+    });
+
+    for (const objectiveData of courseData.objectives) {
+      const existingObjective = await prisma.learningObjective.findFirst({
+        where: {
+          description: objectiveData.description,
+          courseId: course.id,
+        },
+      });
+
+      let objective;
+
+      if (existingObjective) {
+        console.log(`    Skipping existing objective: ${objectiveData.description}`);
+        objective = existingObjective;
+      } else {
+        console.log(`    Creating objective: ${objectiveData.description}`);
+
+        objective = await prisma.learningObjective.create({
+          data: {
+            description: objectiveData.description,
+            bloomLevel: objectiveData.bloomLevel as BloomLevel,
+            position: objectiveData.position,
+            courseId: course.id,
+          },
+        });
+      }
+
+      for (const mappingData of objectiveData.mappings) {
+        const content = await prisma.sRCHContent.findFirst({
+          where: {
+            title: mappingData.contentTitle,
+          },
+        });
+
+        if (!content) {
+          console.log(`      Skipping mapping (content not found): ${mappingData.contentTitle}`);
+          continue;
+        }
+
+        const existingMapping = await prisma.objectiveContentMap.findUnique({
+          where: {
+            learningObjectiveId_srchContentId: {
+              learningObjectiveId: objective.id,
+              srchContentId: content.id,
+            },
+          },
+        });
+
+        if (existingMapping) {
+          console.log(`      Skipping existing mapping: ${content.title}`);
+          continue;
+        }
+
+        console.log(`      Creating mapping: ${content.title}`);
+
+        await prisma.objectiveContentMap.create({
+          data: {
+            learningObjectiveId: objective.id,
+            srchContentId: content.id,
+            isSelected: true,
+          },
+        });
+      }
+    }
+  }
+}
 
   console.log('Seeding complete');
 }

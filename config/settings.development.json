@@ -1,12 +1,107 @@
 {
   "defaultAccounts": [
     { "email": "admin@foo.com", "password": "changeme123", "role": "ADMIN" },
-    { "email": "john@foo.com", "password": "changeme123" }
+    { "email": "john@foo.com", "password": "changeme123", "role": "USER" },
+    { "email": "jaimesms@hawaii.edu", "password": "changeme123", "role": "ADMIN" }
   ],
-  "defaultData": [
-    { "name": "Basket", "quantity": 3, "owner": "john@foo.com", "condition": "excellent" },
-    { "name": "Bicycle", "quantity": 2, "owner": "john@foo.com", "condition": "poor" },
-    { "name": "Banana", "quantity": 2, "owner": "admin@foo.com", "condition": "good" },
-    { "name": "Boogie Board", "quantity": 2, "owner": "admin@foo.com", "condition": "excellent" }
+  "defaultCourses": [
+    {
+      "title": "ICS 314 - Software Engineering",
+      "code": "ICS 314",
+      "description": "Introduction to software engineering principles, web application development, design patterns, and software project practices.",
+      "owner": "jaimesms@hawaii.edu",
+      "objectives": [
+        {
+          "description": "Apply software design patterns to organize and improve application code.",
+          "bloomLevel": "APPLY",
+          "position": 1,
+          "mappings": [
+            { "contentTitle": "Factory Pattern" },
+            { "contentTitle": "Singleton Pattern" }
+          ]
+        },
+        {
+          "description": "Analyze tradeoffs between different web application architecture choices.",
+          "bloomLevel": "ANALYZE",
+          "position": 2,
+          "mappings": [
+            { "contentTitle": "Monolith vs Microservices" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "ICS 311 - Algorithms",
+      "code": "ICS 311",
+      "description": "Study of algorithm design, correctness, runtime analysis, graphs, dynamic programming, and complexity.",
+      "owner": "jaimesms@hawaii.edu",
+      "objectives": [
+        {
+          "description": "Apply dynamic programming techniques to solve optimization problems.",
+          "bloomLevel": "APPLY",
+          "position": 1,
+          "mappings": [
+            { "contentTitle": "Dynamic Programming Basics" }
+          ]
+        },
+        {
+          "description": "Evaluate shortest path algorithms and explain when each one should be used.",
+          "bloomLevel": "EVALUATE",
+          "position": 2,
+          "mappings": [
+            { "contentTitle": "Dijkstra's Algorithm" },
+            { "contentTitle": "Bellman-Ford Algorithm" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "ICS 111 - Introduction to Computer Science",
+      "code": "ICS 111",
+      "description": "An introductory programming course focused on problem solving, control flow, functions, and basic data structures.",
+      "owner": "john@foo.com",
+      "objectives": [
+        {
+          "description": "Use variables, conditionals, and loops to solve basic programming problems.",
+          "bloomLevel": "APPLY",
+          "position": 1,
+          "mappings": [
+            { "contentTitle": "Programming Fundamentals" }
+          ]
+        },
+        {
+          "description": "Break a programming problem into smaller reusable functions.",
+          "bloomLevel": "ANALYZE",
+          "position": 2,
+          "mappings": [
+            { "contentTitle": "Functions and Decomposition" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "SRCH 101 - Teaching with SRCH",
+      "code": "SRCH 101",
+      "description": "A sample administrator course showing how SRCH resources can be connected to course objectives.",
+      "owner": "admin@foo.com",
+      "objectives": [
+        {
+          "description": "Identify SRCH resources that support a course learning objective.",
+          "bloomLevel": "UNDERSTAND",
+          "position": 1,
+          "mappings": [
+            { "contentTitle": "SRCH Content Mapping" }
+          ]
+        },
+        {
+          "description": "Create a curriculum map that connects objectives, resources, and instructor notes.",
+          "bloomLevel": "CREATE",
+          "position": 2,
+          "mappings": [
+            { "contentTitle": "Curriculum Mapping Basics" }
+          ]
+        }
+      ]
+    }
   ]
 }
