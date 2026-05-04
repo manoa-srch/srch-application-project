@@ -111,6 +111,11 @@ const CoursesPage = async () => {
               );
 
               const isDraft = course.objectives.length === 0;
+              const updatedDate = new Intl.DateTimeFormat('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              }).format(new Date(course.updatedAt));
 
               return (
                 <Col key={course.id} md={6} xl={4}>
@@ -141,8 +146,9 @@ const CoursesPage = async () => {
                       <div className="metric-strip mb-4">
                         <span className="metric-chip">{course.objectives.length} objectives</span>
                         <span className="metric-chip">{mappedContentCount} mapped resources</span>
-                        <span className="metric-chip">
-                          Updated {new Date(course.updatedAt).toLocaleDateString('en-US')}
+                        <span className="metric-chip metric-chip-updated">
+                          <span className="metric-chip-label">Last updated</span>
+                          <time dateTime={new Date(course.updatedAt).toISOString()}>{updatedDate}</time>
                         </span>
                       </div>
 

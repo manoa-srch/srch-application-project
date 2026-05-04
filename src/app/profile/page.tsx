@@ -43,11 +43,11 @@ const ProfilePage = async () => {
               </p>
               <div className="metric-strip">
                 <span className="metric-chip">{user.email}</span>
-                <span className="metric-chip">Role: {user.role}</span>
+                <span className="metric-chip metric-chip-profile-role">Role: {user.role}</span>
               </div>
             </Col>
             <Col lg={4}>
-              <div className="dashboard-grid">
+              <div className="dashboard-grid dashboard-grid-profile">
                 <div className="dashboard-stat">
                   <strong>{user.courses.length}</strong>
                   <span>Courses</span>
@@ -56,8 +56,8 @@ const ProfilePage = async () => {
                   <strong>{user.contents.length}</strong>
                   <span>Contributions</span>
                 </div>
-                <div className="dashboard-stat">
-                  <strong>{user.role}</strong>
+                <div className="dashboard-stat dashboard-stat-role">
+                  <strong className="dashboard-stat-role-value">{user.role}</strong>
                   <span>Account role</span>
                 </div>
               </div>

@@ -274,6 +274,14 @@ h6 {
   gap: 1rem;
 }
 
+.dashboard-grid-profile {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboard-grid-course-detail {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .dashboard-stat {
   padding: 1.3rem;
   border-radius: 20px;
@@ -286,6 +294,21 @@ h6 {
   margin-bottom: 0.2rem;
   font-size: 1.8rem;
   color: var(--ink-950);
+}
+
+.dashboard-stat-role {
+  min-width: 0;
+  grid-column: span 2;
+}
+
+.dashboard-stat-course-date {
+  grid-column: span 2;
+}
+
+.dashboard-stat-role-value {
+  font-size: clamp(1.15rem, 1vw + 0.95rem, 1.6rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
 }
 
 .dashboard-stat span {
@@ -320,11 +343,35 @@ h6 {
 }
 
 .metric-chip {
+  display: inline-flex;
+  align-items: center;
   padding: 0.5rem 0.85rem;
   border-radius: 999px;
   background: var(--mist-100);
   color: var(--ink-800);
   font-size: 0.9rem;
+}
+
+.metric-chip-updated {
+  min-width: min(100%, 15.5rem);
+  max-width: 100%;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.metric-chip-label {
+  color: var(--ink-700);
+  white-space: nowrap;
+}
+
+.metric-chip-updated time {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.metric-chip-profile-role {
+  overflow-wrap: anywhere;
 }
 
 .search-panel {
@@ -516,6 +563,10 @@ h6 {
   .hero-stat-grid,
   .dashboard-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-stat-role {
+    grid-column: auto;
   }
 
   .auth-shell {

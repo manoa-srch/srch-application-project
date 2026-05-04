@@ -83,7 +83,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
               </p>
             </Col>
             <Col lg={4}>
-              <div className="dashboard-grid">
+              <div className="dashboard-grid dashboard-grid-course-detail">
                 <div className="dashboard-stat">
                   <strong>{course.objectives.length}</strong>
                   <span>Objectives</span>
@@ -92,7 +92,7 @@ const CoursePage = async ({ params }: CoursePageProps) => {
                   <strong>{mappedCount}</strong>
                   <span>Mapped resources</span>
                 </div>
-                <div className="dashboard-stat">
+                <div className="dashboard-stat dashboard-stat-course-date">
                   <strong>{new Date(course.updatedAt).toLocaleDateString('en-US')}</strong>
                   <span>Last updated</span>
                 </div>
