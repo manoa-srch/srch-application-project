@@ -42,7 +42,7 @@ export async function adminUpdateUser(formData: FormData) {
 
   await prisma.user.update({
     where: { id: Number(userID) },
-    data: {role: Role.ADMIN},
+    data,
   });
 
   redirect('/admin');
