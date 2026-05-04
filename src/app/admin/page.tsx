@@ -13,15 +13,22 @@ const AdminPage = async () => {
     } | null,
   );
 
-  const users = await prisma.user.findMany({
-    orderBy: { email: 'asc' },
-  });
+  const [users, courses] = await Promise.all([
+    prisma.user.findMany({
+      orderBy: { email: 'asc' },
+    }),
+    prisma.course.findMany({
+      include: { owner: true },
+      orderBy: { title: 'asc' },
+    }),
+  ]);
 
   return (
     <main>
       <Container id="admin" fluid className="py-3">
         <AdminClient
           users={users}
+          courses={courses}
           adminUpdateUser={adminUpdateUser}
           adminCreateUser={adminCreateUser}
           adminDeleteUser={adminDeleteUser}

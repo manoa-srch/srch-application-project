@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { hash } from 'bcryptjs';
 import { Role } from '@prisma/client';
+import { revalidatePath } from 'next/cache';
 // Helper to verify admin access
 async function requireAdmin() {
   const session = await auth();
@@ -95,4 +96,36 @@ export async function adminDeleteUser(formData: FormData) {
   });
 
   redirect('/admin');
+}
+
+// Create new course
+export async function adminDeleteCourse(formData: FormData) {
+  const courseID = parseInt(formData.get('courseID') as string, 10);
+  await prisma.course.delete({
+    where: { id: courseID },
+  });
+  revalidatePath('/admin');
+}
+
+export async function adminSyncCourse(formData: FormData) {
+  const courseID = parseInt(formData.get('courseID') as string, 10);
+  
+  // 1. Fetch the course and objectives
+  const course = await prisma.course.findUnique({
+    where: { id: courseID },
+    include: { objectives: true }
+  });
+
+  if (course) {
+    // 2. CALL YOUR AUTO-PULL LOGIC HERE
+    // Example: await yourAutoPullFunction(course.objectives);
+    
+    // 3. Update the course timestamp
+    await prisma.course.update({
+      where: { id: courseID },
+      data: { updatedAt: new Date() }
+    });
+  }
+
+  revalidatePath('/admin');
 }
