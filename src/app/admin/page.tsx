@@ -2,7 +2,20 @@ import { Container } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
 import { auth } from '@/lib/auth';
-import { adminUpdateUser, adminCreateUser, adminDeleteUser } from '@/app/admin/actions';
+import {
+  adminUpdateUser,
+  adminCreateUser,
+  adminDeleteUser,
+  adminCreateCourse,
+  adminUpdateCourse,
+  adminDeleteCourse,
+  adminCreateObjective,
+  adminUpdateObjective,
+  adminDeleteObjective,
+  adminCreateContent,
+  adminUpdateContent,
+  adminDeleteContent,
+} from '@/app/admin/actions';
 import AdminClient from './Admin';
 
 const AdminPage = async () => {
@@ -13,13 +26,21 @@ const AdminPage = async () => {
     } | null,
   );
 
-  const [users, courses] = await Promise.all([
+  const [users, courses, objectives, content] = await Promise.all([
     prisma.user.findMany({
       orderBy: { email: 'asc' },
     }),
     prisma.course.findMany({
       include: { owner: true },
       orderBy: { title: 'asc' },
+    }),
+    prisma.learningObjective.findMany({
+      orderBy: { id: 'asc' },
+      include: { course: true },
+    }),
+    prisma.sRCHContent.findMany({
+      orderBy: { title: 'asc' },
+      include: { author: true },
     }),
   ]);
 
@@ -29,9 +50,20 @@ const AdminPage = async () => {
         <AdminClient
           users={users}
           courses={courses}
+          objectives={objectives}
+          content={content}
           adminUpdateUser={adminUpdateUser}
           adminCreateUser={adminCreateUser}
           adminDeleteUser={adminDeleteUser}
+          adminCreateCourse={adminCreateCourse}
+          adminUpdateCourse={adminUpdateCourse}
+          adminDeleteCourse={adminDeleteCourse}
+          adminCreateObjective={adminCreateObjective}
+          adminUpdateObjective={adminUpdateObjective}
+          adminDeleteObjective={adminDeleteObjective}
+          adminCreateContent={adminCreateContent}
+          adminUpdateContent={adminUpdateContent}
+          adminDeleteContent={adminDeleteContent}
         />
       </Container>
     </main>
