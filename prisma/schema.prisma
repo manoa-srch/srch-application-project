@@ -13,6 +13,8 @@ model User {
   firstName String
   lastName  String
   name      String?
+  bio       String?
+  profileImage String?
   role      Role          @default(INSTRUCTOR)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
