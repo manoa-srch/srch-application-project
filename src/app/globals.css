@@ -374,6 +374,16 @@ h6 {
   overflow-wrap: anywhere;
 }
 
+.form-text-prominent {
+  font-size: 0.98rem;
+}
+
+.form-text-prominent a {
+  color: var(--bs-primary);
+  text-decoration: underline;
+  text-underline-offset: 0.14em;
+}
+
 .search-panel {
   padding: 1.1rem;
   border-radius: 24px;

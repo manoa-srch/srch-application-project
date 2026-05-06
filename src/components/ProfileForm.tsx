@@ -93,20 +93,16 @@ const ProfileForm = ({
         <div className="form-text">
           Upload a PNG, JPEG, WebP, or GIF image up to 2 MB.
         </div>
-        {initialData?.profileImage ? (
-          <div className="form-check mt-2">
-            <input
-              id="removeProfileImage"
-              name="removeProfileImage"
-              type="checkbox"
-              value="true"
-              className="form-check-input"
-            />
-            <label htmlFor="removeProfileImage" className="form-check-label">
-              Remove current profile picture
-            </label>
-          </div>
-        ) : null}
+        <div className="form-text form-text-prominent mt-2">
+          If you need to resize a photo for upload, try{' '}
+          <a
+            href="https://flux.zacklown.com"
+            target="_blank"
+            rel="noreferrer"
+          >
+            flux.zacklown.com
+          </a>
+        </div>
       </div>
     ) : null}
 

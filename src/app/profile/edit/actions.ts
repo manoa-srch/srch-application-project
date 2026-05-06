@@ -31,7 +31,6 @@ export async function updateProfile(formData: FormData) {
   const lastName = formData.get('lastName')?.toString().trim() ?? '';
   const name = formData.get('name')?.toString().trim() ?? '';
   const bio = formData.get('bio')?.toString().trim() ?? '';
-  const removeProfileImage = formData.get('removeProfileImage') === 'true';
   const profileImageFile = formData.get('profileImageFile');
   const canManageProfileImage = user.role === 'INSTRUCTOR';
 
@@ -40,10 +39,6 @@ export async function updateProfile(formData: FormData) {
   }
 
   let nextProfileImage = user.profileImage;
-
-  if (canManageProfileImage && removeProfileImage) {
-    nextProfileImage = null;
-  }
 
   if (canManageProfileImage && profileImageFile instanceof File && profileImageFile.size > 0) {
     if (!ALLOWED_PROFILE_IMAGE_TYPES.has(profileImageFile.type)) {
