@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import UserAvatar from '@/components/UserAvatar';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,6 +30,9 @@ const ProfilePage = async () => {
     redirect('/auth/signin');
   }
 
+  const displayName = user.name ?? `${user.firstName} ${user.lastName}`;
+  const instructorPhoto = user.role === 'INSTRUCTOR' ? user.profileImage : null;
+
   return (
     <main className="section-shell">
       <Container className="py-4 py-lg-5">
@@ -36,10 +40,9 @@ const ProfilePage = async () => {
           <Row className="align-items-center g-4">
             <Col lg={8} className="hero-copy">
               <span className="eyebrow mb-3">Profile</span>
-              <h1 className="mb-3">{user.name ?? `${user.firstName} ${user.lastName}`}</h1>
+              <h1 className="mb-3">{displayName}</h1>
               <p className="mb-3">
-                Manage your account, review your courses, and keep track of the SRCH content you
-                have contributed to the platform.
+                {user.bio?.trim() || 'Manage your account, review your courses, and keep track of the SRCH content you have contributed to the platform.'}
               </p>
               <div className="metric-strip">
                 <span className="metric-chip">{user.email}</span>
@@ -47,22 +50,25 @@ const ProfilePage = async () => {
               </div>
             </Col>
             <Col lg={4}>
-              <div className="dashboard-grid dashboard-grid-profile">
-                <div className="dashboard-stat">
-                  <strong>{user.courses.length}</strong>
-                  <span>Courses</span>
-                </div>
-                <div className="dashboard-stat">
-                  <strong>{user.contents.length}</strong>
-                  <span>Contributions</span>
-                </div>
-                <div className="dashboard-stat dashboard-stat-role">
-                  <strong className="dashboard-stat-role-value">{user.role}</strong>
-                  <span>Account role</span>
-                </div>
+              <div className="profile-spotlight">
+                <UserAvatar imageUrl={instructorPhoto} name={displayName} />
               </div>
             </Col>
           </Row>
+          <div className="profile-stat-strip">
+            <div className="dashboard-stat profile-stat-chip">
+              <strong>{user.courses.length}</strong>
+              <span>Courses</span>
+            </div>
+            <div className="dashboard-stat profile-stat-chip">
+              <strong>{user.contents.length}</strong>
+              <span>Contributions</span>
+            </div>
+            <div className="dashboard-stat profile-stat-chip">
+              <strong className="dashboard-stat-role-value">{user.role}</strong>
+              <span>Account role</span>
+            </div>
+          </div>
         </section>
 
         <section className="section-card p-4 mb-4">

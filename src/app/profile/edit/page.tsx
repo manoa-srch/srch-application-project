@@ -41,12 +41,15 @@ const EditProfilePage = async () => {
               <div className="p-4">
                 <ProfileForm
                   action={updateProfile}
+                  canManageProfileImage={user.role === 'INSTRUCTOR'}
                   submitText="Save Changes"
                   cancelHref="/profile"
                   initialData={{
                     firstName: user.firstName,
                     lastName: user.lastName,
                     name: user.name,
+                    bio: user.bio,
+                    profileImage: user.profileImage,
                   }}
                 />
               </div>
@@ -63,6 +66,11 @@ const EditProfilePage = async () => {
                 <p className="mb-0">
                   <strong>Role:</strong> {user.role}
                 </p>
+                {user.role !== 'INSTRUCTOR' ? (
+                  <p className="text-muted mb-0 mt-3">
+                    Profile photo uploads are only available for instructors.
+                  </p>
+                ) : null}
               </div>
             </Card>
           </Col>

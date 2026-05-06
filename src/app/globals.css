@@ -546,6 +546,62 @@ h6 {
   line-height: 1.45;
 }
 
+.profile-spotlight {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-stat-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.profile-stat-chip {
+  min-width: 0;
+}
+
+.user-avatar {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(39, 71, 102, 0.12);
+  background: linear-gradient(135deg, rgba(216, 234, 220, 0.9), rgba(219, 231, 240, 0.95));
+  box-shadow: var(--shadow-card);
+}
+
+.user-avatar-lg {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 280px;
+  margin-inline: auto;
+}
+
+.user-avatar-sm {
+  width: 48px;
+  height: 48px;
+}
+
+.user-avatar__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.user-avatar-fallback {
+  display: grid;
+  place-items: center;
+  color: var(--ink-900);
+  font-family: var(--font-display), serif;
+}
+
+.user-avatar-fallback span {
+  font-size: clamp(2.4rem, 5vw, 4.5rem);
+  line-height: 1;
+}
+
 .empty-state {
   padding: 2rem;
   text-align: center;
@@ -561,7 +617,8 @@ h6 {
   }
 
   .hero-stat-grid,
-  .dashboard-grid {
+  .dashboard-grid,
+  .profile-stat-strip {
     grid-template-columns: 1fr;
   }
 
