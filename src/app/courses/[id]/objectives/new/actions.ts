@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
+
 const validBloomLevels = new Set([
   'REMEMBER',
   'UNDERSTAND',
@@ -70,7 +71,7 @@ export async function createObjective(formData: FormData) {
   const objective = await prisma.learningObjective.create({
     data: {
       description,
-      bloomLevel: bloomLevel as
+      bloomLevel: bloomLevel as 
         | 'REMEMBER'
         | 'UNDERSTAND'
         | 'APPLY'
@@ -85,6 +86,7 @@ export async function createObjective(formData: FormData) {
   const templateObjectiveId = templateObjectiveIdValue
     ? parseInt(templateObjectiveIdValue, 10)
     : null;
+  let hasMappings = false;
 
   if (templateObjectiveId && !Number.isNaN(templateObjectiveId)) {
     const templateObjective = await prisma.learningObjective.findUnique({
@@ -99,6 +101,7 @@ export async function createObjective(formData: FormData) {
     });
 
     if (templateObjective && templateObjective.mappings.length > 0) {
+      hasMappings = true;
       await prisma.learningObjective.update({
         where: {
           id: objective.id,
@@ -116,6 +119,18 @@ export async function createObjective(formData: FormData) {
         },
       });
     }
+  }
+  if (!hasMappings) {
+    await prisma.forumPost.create({
+      data: {
+        title: description.length > 80 ? description.slice(0, 80) + '...' : description,
+        description,
+        bloomLevel: bloomLevel as 'REMEMBER' | 'UNDERSTAND' | 'APPLY' | 'ANALYZE' | 'EVALUATE' | 'CREATE',
+        authorId: user.id,
+        mappedObjectiveId: objective.id,
+        status: 'PENDING',
+      },
+    });
   }
 
   const intent = formData.get('intent')?.toString();
