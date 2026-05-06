@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "npx tsx prisma/seed.ts",
-    "playwright": "npx playwright test",
+    "playwright": "npx playwright test"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

@@ -1,19 +1,15 @@
-import { PrismaClient, BloomLevel, ForumStatus } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import { BloomLevel, ForumStatus } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 
 async function main() {
   console.log('Finding unmapped learning objectives...');
 
-  // Find all objectives with no mappings and no existing forum post
   const unmappedObjectives = await prisma.learningObjective.findMany({
     where: {
       mappings: { none: {} },
       forumPosts: { none: {} },
     },
-    include: {
-      course: true,
-    },
+    include: { course: true },
   });
 
   console.log(`Found ${unmappedObjectives.length} unmapped objectives.`);
@@ -23,14 +19,11 @@ async function main() {
     return;
   }
 
-  // Find a system/admin user to attribute the posts to
   const adminUser = await prisma.user.findFirst({
     where: { role: 'ADMIN' },
   });
 
-  if (!adminUser) {
-    throw new Error('No admin user found. Please seed the database first.');
-  }
+  if (!adminUser) throw new Error('No admin user found. Please seed the database first.');
 
   console.log(`Attributing posts to admin: ${adminUser.email}`);
 
