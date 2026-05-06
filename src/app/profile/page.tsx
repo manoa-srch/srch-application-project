@@ -106,7 +106,17 @@ const ProfilePage = async () => {
                         <h4 className="mb-0">{course.title}</h4>
                         <Badge bg="secondary">{course.code ?? 'Course'}</Badge>
                       </div>
-                      <p className="text-muted mb-4">{course.description ?? 'No description available.'}</p>
+                      <p
+                        className="text-muted mb-4"
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 4,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        {course.description ?? 'No description available.'}
+                      </p>
                       <div className="d-flex gap-2 flex-wrap mt-auto">
                         <Button size="sm" href={`/courses/${course.id}`}>Open</Button>
                         <Button size="sm" variant="outline-secondary" href={`/courses/${course.id}/edit`}>
