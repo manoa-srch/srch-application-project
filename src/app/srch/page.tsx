@@ -45,8 +45,14 @@ const SRCHPage = async ({ searchParams }: SRCHPageProps) => {
   };
 
   const topicHref = (topic: string) => {
-    const queryString = mappingQuery ? `?${mappingQuery}` : '';
-    return `/srch/${encodeURIComponent(topic)}${queryString}`;
+    const queryParts = [`q=${encodeURIComponent(topic)}`];
+
+    if (courseId && objectiveId) {
+      queryParts.push(`courseId=${courseId}`);
+      queryParts.push(`objectiveId=${objectiveId}`);
+    }
+
+    return `/srch?${queryParts.join('&')}`;
   };
 
   const searchResults = q
