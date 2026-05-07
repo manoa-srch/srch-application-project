@@ -102,9 +102,11 @@ test('can edit a course with legal inputs', async ({ page }) => {
 
   await page.getByLabel('Course Title').fill(updatedTitle);
   await page.getByLabel('Course Code').fill('ICS 315');
-  await page.getByLabel('Course Description').fill('Updated by Playwright.');
+  await page.locator('textarea[name="description"]').fill('Updated by Playwright.');
 
   await page.getByRole('button', { name: 'Save Changes' }).click();
+
+  await expect(page).toHaveURL(/\/courses\/\d+/);
 
   await expect(page.getByRole('heading', { level: 1, name: updatedTitle })).toBeVisible();
   await expect(page.getByRole('main').getByText(/^ICS 315$/)).toBeVisible();
